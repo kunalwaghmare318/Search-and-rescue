@@ -1,0 +1,23 @@
+# Virtual Environments
+.venv/
+venv/
+
+# Python Cache & Build Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Large Model Checkpoints & Replay Buffers
+models/*.zip
+!models/.gitkeep
+
+# Tensorboard Logs
+logs/
+
+# IDE & OS Artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
