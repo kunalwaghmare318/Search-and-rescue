@@ -272,14 +272,24 @@ function onWindowResize() {
 // ==============================================================================
 // FAST PARALLEL ASSET LOADING WITH TIMEOUT FALLBACKS
 // ==============================================================================
-function loadGLTFWithTimeout(loader, url, timeoutMs = 15000) {
+function loadGLTFWithTimeout(loader, url, timeoutMs = 90000) {
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`Timeout ${url}`)), timeoutMs);
+    const timer = setTimeout(() => {
+      console.warn(`Asset load timed out: ${url}`);
+      reject(new Error(`Timeout ${url}`));
+    }, timeoutMs);
     loader.load(url, (gltf) => {
       clearTimeout(timer);
       resolve(gltf);
-    }, undefined, (err) => {
+    }, (progress) => {
+      if (progress.total > 0) {
+        const pct = Math.round((progress.loaded / progress.total) * 100);
+        const el = document.getElementById('loader-status');
+        if (el) el.innerText = `Loading 3D assets... (${pct}%)`;
+      }
+    }, (err) => {
       clearTimeout(timer);
+      console.warn(`Failed to load asset: ${url}`, err);
       reject(err);
     });
   });
@@ -290,16 +300,16 @@ async function loadAssets() {
   const warnings = [];
 
   const [resCityA, resCityB, resHongKong, resSeoul, resBrutalist, resStatue, resResidential, resRuined, resDrone, resPerson] = await Promise.allSettled([
-    loadGLTFWithTimeout(loader, 'assets/city/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/city_part_2/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/brutalist/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/drone/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 8000),
+    loadGLTFWithTimeout(loader, 'assets/city/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/city_part_2/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/brutalist/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/drone/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 90000),
   ]);
 
   if (resCityA.status === 'fulfilled') cityMeshA = resCityA.value.scene;
