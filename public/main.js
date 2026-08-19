@@ -299,27 +299,21 @@ async function loadAssets() {
   const loader = new GLTFLoader();
   const warnings = [];
 
-  const [resCityA, resCityB, resHongKong, resSeoul, resBrutalist, resStatue, resResidential, resRuined, resDrone, resPerson] = await Promise.allSettled([
-    loadGLTFWithTimeout(loader, 'assets/city/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/city_part_2/scene.gltf', 90000),
+  const [resHongKong, resSeoul, resResidential, resRuined, resStatue, resDrone, resPerson] = await Promise.allSettled([
     loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 90000),
     loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/brutalist/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 90000),
     loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 90000),
     loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 90000),
+    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 90000),
     loadGLTFWithTimeout(loader, 'assets/drone/scene.gltf', 90000),
     loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 90000),
   ]);
 
-  if (resCityA.status === 'fulfilled') cityMeshA = resCityA.value.scene;
-  if (resCityB.status === 'fulfilled') cityMeshB = resCityB.value.scene;
   if (resHongKong.status === 'fulfilled') hongkongMesh = resHongKong.value.scene;
   if (resSeoul.status === 'fulfilled') seoulMesh = resSeoul.value.scene;
-  if (resBrutalist.status === 'fulfilled') brutalistMesh = resBrutalist.value.scene;
-  if (resStatue.status === 'fulfilled') statueMesh = resStatue.value.scene;
   if (resResidential.status === 'fulfilled') residentialMesh = resResidential.value.scene;
   if (resRuined.status === 'fulfilled') ruinedMesh = resRuined.value.scene;
+  if (resStatue.status === 'fulfilled') statueMesh = resStatue.value.scene;
 
   if (resDrone.status === 'fulfilled') {
     droneTemplate = resDrone.value.scene;
@@ -618,19 +612,15 @@ function setupEnvironmentComposition() {
   // 3. NON-OVERLAPPING 4-QUADRANT JIGSAW PUZZLE TILING (0% overlap, 100% coverage)
   // Quadrant 1: North-West [0..50, 0..50] (HongKong / City Part A)
   if (hongkongMesh) placeTileModel(hongkongMesh, 0.0, 50.0, 0.0, 50.0, 'tile_nw');
-  else if (cityMeshA) placeTileModel(cityMeshA, 0.0, 50.0, 0.0, 50.0, 'tile_nw');
 
   // Quadrant 2: North-East [50..100, 0..50] (Seoul City)
   if (seoulMesh) placeTileModel(seoulMesh, 50.0, 100.0, 0.0, 50.0, 'tile_ne');
-  else if (cityMeshB) placeTileModel(cityMeshB, 50.0, 100.0, 0.0, 50.0, 'tile_ne');
 
   // Quadrant 3: South-West [0..50, 50..100] (New 5-Storey Residential Building)
   if (residentialMesh) placeTileModel(residentialMesh, 0.0, 50.0, 50.0, 100.0, 'tile_sw');
-  else if (cityMeshA) placeTileModel(cityMeshA, 0.0, 50.0, 50.0, 100.0, 'tile_sw');
 
   // Quadrant 4: South-East [50..100, 50..100] (Ruined City 5 Free)
   if (ruinedMesh) placeTileModel(ruinedMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
-  else if (brutalistMesh) placeTileModel(brutalistMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
 
   // Restore saved custom layout or apply DEFAULT_LOCKED_CITY_LAYOUT as codebase base default
   try {
