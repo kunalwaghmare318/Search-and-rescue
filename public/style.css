@@ -37,12 +37,8 @@ html, body {
 
 /* ===== LOADING SCREEN ===== */
 #loading-screen {
-  position: absolute; inset: 0; z-index: 1000;
-  background: var(--bg-primary);
-  display: flex; align-items: center; justify-content: center;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  display: none !important;
 }
-#loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .loader-content { text-align: center; }
 .loader-content h2 {

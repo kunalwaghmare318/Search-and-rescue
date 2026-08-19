@@ -7,23 +7,10 @@
   <meta name="description" content="3D live visualization of multi-agent search and rescue drone simulation with area mapping mode">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=v11">
+  <link rel="stylesheet" href="style.css?v=v15">
 </head>
 <body>
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <div class="loader-content">
-      <div class="loader-spinner"></div>
-      <h2>VIHANG</h2>
-      <p class="loader-subtitle">Initializing 3D Disaster Zone Environment...</p>
-      <div class="loader-progress">
-        <div class="loader-bar" id="loader-bar"></div>
-      </div>
-      <p class="loader-status" id="loader-status">Loading assets & models...</p>
-      <div id="asset-warnings"></div>
-      <button id="btn-skip-loader" onclick="document.getElementById('loading-screen').classList.add('hidden')" style="margin-top:16px; padding:8px 20px; background:rgba(13,148,136,0.25); border:1px solid #0d9488; color:#2dd4bf; border-radius:8px; cursor:pointer; font-family:inherit; font-size:0.82rem; font-weight:600; transition:all 0.2s;">▶ Skip & Enter Workspace</button>
-    </div>
-  </div>
+
 
   <!-- Main Scene -->
   <div id="app">
@@ -360,7 +347,7 @@
     }
   }
   </script>
-  <script type="module" src="main.js?v=v14"></script>
+  <script type="module" src="main.js?v=v15"></script>
   <script>
     setTimeout(() => {
       const ls = document.getElementById('loading-screen');
