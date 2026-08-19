@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: vihang-sar-drone-swarm
+    env: python
+    buildCommand: "npm install && npm run build && pip install -r requirements.txt"
+    startCommand: "python serve.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0

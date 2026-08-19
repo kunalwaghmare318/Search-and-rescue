@@ -9,9 +9,23 @@ __pycache__/
 *.so
 .pytest_cache/
 
-# Large Model Checkpoints & Replay Buffers
+# Frontend Build & Dependencies
+node_modules/
+dist/
+frontend/
+
+# Large Model Checkpoints - Ignore training checkpoints but keep production models
 models/*.zip
 !models/.gitkeep
+!models/ppo_FINAL_BEST_v15.zip
+!models/ppo_FINAL_BEST.zip
+!models/ppo_area_mapping_v2_2000000_steps.zip
+!models/ppo_area_mapping_v2_BEST.zip
+!models/ppo_area_mapping_v3_BEST.zip
+!models/ppo_area_mapping_v3_final.zip
+
+# Raw glTF zip archives
+Gltf files/
 
 # Tensorboard Logs
 logs/
