@@ -951,23 +951,7 @@ function setupEnvironmentComposition() {
   if (ruinedMesh) placeTileModel(ruinedMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
   else createProceduralTile('se', 50.0, 100.0, 50.0, 100.0, 'tile_se');
 
-  // Apply the exact locked city layout
-  let layoutToApply = DEFAULT_LOCKED_CITY_LAYOUT;
-  try {
-    const saved = localStorage.getItem('vihang_custom_city_layout');
-    if (saved) {
-      layoutToApply = JSON.parse(saved);
-    }
-  } catch (e) {}
 
-  layoutToApply.forEach(item => {
-    const target = editableModelGroups.find(m => m.id === item.id);
-    if (target && target.object) {
-      if (item.pos) target.object.position.fromArray(item.pos);
-      if (item.rot) target.object.rotation.fromArray(item.rot);
-      if (item.scale) target.object.scale.fromArray(item.scale);
-    }
-  });
 
   envGroup.traverse(child => {
     if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
