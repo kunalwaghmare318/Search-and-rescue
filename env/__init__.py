@@ -1,3 +1,5 @@
-from env.search_rescue_env import SearchAndRescueEnv, parallel_env
-
-__all__ = ["SearchAndRescueEnv", "parallel_env"]
+try:
+    from env.search_rescue_env import SearchAndRescueEnv, parallel_env
+    __all__ = ["SearchAndRescueEnv", "parallel_env"]
+except Exception:
+    __all__ = []

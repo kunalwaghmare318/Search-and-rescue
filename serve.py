@@ -8,9 +8,12 @@ import torch
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from stable_baselines3 import PPO
-from env.search_rescue_area_mapping_v2 import SearchAndRescueAreaMappingEnvV2
-from env.search_rescue_area_mapping_v3 import AreaMappingEnvV3
+try:
+    from stable_baselines3 import PPO
+    HAS_SB3 = True
+except Exception as _sb3_err:
+    PPO = None
+    HAS_SB3 = False
 
 from env.search_rescue_env_v15 import (
     SearchAndRescueEnvV15,
@@ -60,16 +63,21 @@ state = ServerState()
 
 
 def load_model_if_needed():
-    if state.model is None:
-        if not os.path.exists(MODEL_PATH):
-            raise RuntimeError(f"V15 Model checkpoint not found at {MODEL_PATH}")
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        state.model = PPO.load(MODEL_PATH, device=device)
+    if state.model is None and HAS_SB3 and PPO is not None:
+        if os.path.exists(MODEL_PATH):
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            try:
+                state.model = PPO.load(MODEL_PATH, device=device)
+            except Exception as e:
+                print(f"Warning: could not load model checkpoint ({e})")
 
 
 @app.on_event("startup")
 def startup_event():
-    load_model_if_needed()
+    try:
+        load_model_if_needed()
+    except Exception:
+        pass
 
 
 @app.post("/randomize")
@@ -268,8 +276,11 @@ def step_simulation():
             actions[agent] = 0
             continue
 
-        act, _ = state.model.predict(state.obs[agent], deterministic=True)
-        act = int(act)
+        if state.model is not None:
+            act, _ = state.model.predict(state.obs[agent], deterministic=True)
+            act = int(act)
+        else:
+            act = 0
         r, c = state.env.agent_positions[agent]
         alt = getattr(state.env, "agent_altitudes", {}).get(agent, 0)
         history = getattr(state.env, "agent_histories", {}).get(agent, [])

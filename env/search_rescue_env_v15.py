@@ -1,6 +1,10 @@
 import numpy as np
 from gymnasium import spaces
-from pettingzoo import ParallelEnv
+try:
+    from pettingzoo import ParallelEnv
+except ImportError:
+    class ParallelEnv:
+        pass
 
 # ==============================================================================
 # ENVIRONMENT CONFIGURATION: V15 (3D ELEVATION / ALTITUDE COLLISION AVOIDANCE)

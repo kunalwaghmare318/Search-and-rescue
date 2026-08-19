@@ -2101,17 +2101,26 @@ function switchMode(mode) {
       if (d.groundRing) d.groundRing.visible = true;
       if (d.flashSphere) d.flashSphere.visible = true;
     });
+    mappingDroneInstances.forEach(d => {
+      if (d.mesh) d.mesh.visible = false;
+      if (d.detCone) d.detCone.visible = false;
+      if (d.groundShadow) d.groundShadow.visible = false;
+      if (d.verticalTether) d.verticalTether.visible = false;
+    });
+    if (pointCloudGroup) pointCloudGroup.visible = false;
   } else {
     tabMapping.classList.add('active');
     rescueControls.classList.add('hidden');
     mappingControls.classList.remove('hidden');
     sidebar.classList.add('hidden');
     sidebarMapping.classList.remove('hidden');
-    modeBadge.innerText = 'AREA MAPPING';
+    modeBadge.innerText = '3D AREA MAPPING';
     modeBadge.style.background = 'rgba(139, 92, 246, 0.15)';
     modeBadge.style.color = '#8b5cf6';
 
-    if (envGroup) envGroup.visible = false;
+    // KEEP 3D CITY ENVIRONMENT VISIBLE DURING MAPPING
+    if (envGroup) envGroup.visible = true;
+
     personInstances.forEach(p => {
       if (p.mesh) p.mesh.visible = false;
       if (p.ring) p.ring.visible = false;
@@ -2124,6 +2133,13 @@ function switchMode(mode) {
       if (d.groundRing) d.groundRing.visible = false;
       if (d.flashSphere) d.flashSphere.visible = false;
     });
+    mappingDroneInstances.forEach(d => {
+      if (d.mesh) d.mesh.visible = true;
+      if (d.detCone) d.detCone.visible = true;
+      if (d.groundShadow) d.groundShadow.visible = true;
+      if (d.verticalTether) d.verticalTether.visible = true;
+    });
+    if (pointCloudGroup) pointCloudGroup.visible = true;
   }
 }
 
@@ -2132,13 +2148,34 @@ if (tabRescue) tabRescue.addEventListener('click', () => switchMode('rescue'));
 if (tabMapping) tabMapping.addEventListener('click', () => switchMode('mapping'));
 
 // ==============================================================================
-// 3D AREA MAPPING MODE — 3D Point Cloud & LiDAR Raycasting Simulation
+// 3D AREA MAPPING MODE — Bioluminescent Spectral LiDAR Point Cloud Scan
 // ==============================================================================
 let pointCloudGroup = null;
 let pointCloudPointsMesh = null;
 const pointCloudPositions = [];
 const pointCloudColors = [];
 const mappingLidarRays = [];
+
+function getLidarSpectralColor(y, typeId = 0) {
+  const c = new THREE.Color();
+  if (y < 0.6) {
+    // Terrain / ground level: golden amber forest-floor luminescence
+    c.setHSL(0.12, 0.95, 0.52);
+  } else if (y < 6.0) {
+    // Low architecture & vegetation: vibrant lime to emerald green
+    const t = (y - 0.6) / 5.4;
+    c.setHSL(0.26 + t * 0.12, 0.95, 0.55);
+  } else if (y < 15.0) {
+    // Mid structure & canopy: vivid cyan & electric blue
+    const t = (y - 6.0) / 9.0;
+    c.setHSL(0.50 + t * 0.08, 0.98, 0.58);
+  } else {
+    // High towers / rooftops / spires: fiery radiant orange & golden yellow
+    const t = Math.min(1.0, (y - 15.0) / 12.0);
+    c.setHSL(0.04 + (1.0 - t) * 0.06, 0.98, 0.60);
+  }
+  return c;
+}
 
 function clearPointCloud() {
   if (pointCloudGroup) {
@@ -2162,19 +2199,20 @@ function addDiscovered3DPoints(hits) {
   if (!pointCloudGroup) clearPointCloud();
 
   hits.forEach(([hx, hy, hz, typeId]) => {
+    // Add primary hit point
     pointCloudPositions.push(hx, hy, hz);
-    const col = MAP_TYPE_COLORS[typeId] || MAP_TYPE_COLORS[0];
+    const col = getLidarSpectralColor(hy, typeId);
     pointCloudColors.push(col.r, col.g, col.b);
 
-    // Render small 3D wireframe voxel cube for structure surfaces
-    if (typeId > 0 && Math.random() < 0.25) {
-      const boxGeo = new THREE.BoxGeometry(1.4, 1.4, 1.4);
-      const boxMat = new THREE.MeshBasicMaterial({
-        color: col, transparent: true, opacity: 0.65, wireframe: true
-      });
-      const voxelMesh = new THREE.Mesh(boxGeo, boxMat);
-      voxelMesh.position.set(hx, hy, hz);
-      pointCloudGroup.add(voxelMesh);
+    // Micro-scatter for dense LiDAR survey-grade point cloud effect
+    const scatterCount = typeId > 0 ? 3 : 1;
+    for (let s = 0; s < scatterCount; s++) {
+      const rx = hx + (Math.random() - 0.5) * 0.8;
+      const ry = Math.max(0.0, hy + (Math.random() - 0.5) * 0.5);
+      const rz = hz + (Math.random() - 0.5) * 0.8;
+      pointCloudPositions.push(rx, ry, rz);
+      const sCol = getLidarSpectralColor(ry, typeId);
+      pointCloudColors.push(sCol.r, sCol.g, sCol.b);
     }
   });
 
@@ -2190,7 +2228,12 @@ function addDiscovered3DPoints(hits) {
   pGeo.setAttribute('color', new THREE.Float32BufferAttribute(pointCloudColors, 3));
 
   const pMat = new THREE.PointsMaterial({
-    size: 2.2, vertexColors: true, transparent: true, opacity: 0.95
+    size: 2.4,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.95,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
   pointCloudPointsMesh = new THREE.Points(pGeo, pMat);
   pointCloudGroup.add(pointCloudPointsMesh);
@@ -2614,18 +2657,23 @@ function render3DViewerPointCloud() {
 
   viewer3DPointsData.forEach(([px, py, pz, typeId]) => {
     positions.push(px, py, pz);
-    let col;
-    if (viewer3DColorMode === 'height') {
-      const hNorm = Math.min(1.0, Math.max(0.0, py / 26.0));
-      col = _tmpHeightColor;
-      if (hNorm < 0.08) col.setHSL(0.40, 0.85, 0.50);
-      else if (hNorm < 0.35) col.setHSL(0.55, 0.90, 0.55);
-      else if (hNorm < 0.70) col.setHSL(0.12, 0.95, 0.55);
-      else col.setHSL(0.92, 0.95, 0.60);
-    } else {
-      col = MAP_TYPE_COLORS[typeId] || MAP_TYPE_COLORS[0];
-    }
+    let col = (viewer3DColorMode === 'height')
+      ? getLidarSpectralColor(py, typeId)
+      : (MAP_TYPE_COLORS[typeId] || MAP_TYPE_COLORS[0]);
     colors.push(col.r, col.g, col.b);
+
+    // Micro-scatter for dense survey point cloud inspection
+    const scatterCount = typeId > 0 ? 3 : 1;
+    for (let s = 0; s < scatterCount; s++) {
+      const rx = px + (Math.random() - 0.5) * 0.8;
+      const ry = Math.max(0.0, py + (Math.random() - 0.5) * 0.5);
+      const rz = pz + (Math.random() - 0.5) * 0.8;
+      positions.push(rx, ry, rz);
+      const sCol = (viewer3DColorMode === 'height')
+        ? getLidarSpectralColor(ry, typeId)
+        : (MAP_TYPE_COLORS[typeId] || MAP_TYPE_COLORS[0]);
+      colors.push(sCol.r, sCol.g, sCol.b);
+    }
   });
 
   const geo = new THREE.BufferGeometry();
@@ -2636,7 +2684,9 @@ function render3DViewerPointCloud() {
     size: 2.8,
     vertexColors: true,
     transparent: true,
-    opacity: 0.95
+    opacity: 0.95,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
 
   viewer3DPointCloudMesh = new THREE.Points(geo, mat);
