@@ -528,6 +528,199 @@ function toggleEditLayoutMode() {
   }
 }
 
+// ==============================================================================
+// HIGH-FIDELITY PROCEDURAL TEXTURE & ARCHITECTURE GENERATOR (0MS INSTANT LOAD)
+// ==============================================================================
+function createSkyscraperTexture(baseColorHex = '#1e293b', glassColorHex = '#38bdf8', illuminatedRatio = 0.45) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = baseColorHex;
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Vertical structural columns
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+  for (let x = 0; x < 512; x += 64) {
+    ctx.fillRect(x, 0, 8, 512);
+  }
+
+  // Window grid with illuminated interior offices
+  const rows = 16;
+  const cols = 8;
+  const w = 46;
+  const h = 20;
+
+  for (let r = 0; r < rows; r++) {
+    const y = r * 32 + 6;
+    for (let c = 0; c < cols; c++) {
+      const x = c * 64 + 10;
+      const isLit = Math.random() < illuminatedRatio;
+      if (isLit) {
+        const warm = Math.random() < 0.65;
+        ctx.fillStyle = warm ? 'rgba(253, 224, 71, 0.95)' : 'rgba(56, 189, 248, 0.9)';
+      } else {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+      }
+      ctx.fillRect(x, y, w, h);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, w, h);
+    }
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}
+
+function createResidentialFacadeTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#475569';
+  ctx.fillRect(0, 0, 512, 512);
+
+  for (let r = 0; r < 8; r++) {
+    const y = r * 64;
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(0, y, 512, 10);
+
+    for (let c = 0; c < 6; c++) {
+      const x = c * 85 + 10;
+      ctx.fillStyle = Math.random() < 0.5 ? 'rgba(254, 240, 138, 0.9)' : 'rgba(30, 41, 59, 0.95)';
+      ctx.fillRect(x + 5, y + 16, 55, 34);
+
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x, y + 42, 65, 14);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y + 42, 65, 14);
+    }
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}
+
+function createRubbleDisasterTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#475569';
+  ctx.fillRect(0, 0, 512, 512);
+
+  ctx.fillStyle = '#f59e0b';
+  for (let i = -512; i < 512; i += 40) {
+    ctx.beginPath();
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i + 20, 0);
+    ctx.lineTo(i + 20 + 512, 512);
+    ctx.lineTo(i + 512, 512);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
+  ctx.fillRect(0, 0, 512, 512);
+
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 2;
+  for (let i = 20; i < 512; i += 55) {
+    ctx.beginPath();
+    ctx.moveTo(0, i);
+    ctx.lineTo(512, i + (Math.random() - 0.5) * 20);
+    ctx.stroke();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}
+
+function createHelipadMarkingTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(0, 0, 512, 512);
+
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 24;
+  ctx.beginPath();
+  ctx.arc(256, 256, 210, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 12;
+  ctx.beginPath();
+  ctx.arc(256, 256, 170, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 200px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('H', 256, 256);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+}
+
+function createAsphaltRoadTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 1024;
+  const ctx = canvas.getContext('2d');
+
+  // Asphalt base
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, 1024, 1024);
+
+  // Outer border road & cross grid lines
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 8;
+  for (let i = 0; i <= 1024; i += 102.4) {
+    ctx.beginPath();
+    ctx.moveTo(i, 0); ctx.lineTo(i, 1024);
+    ctx.moveTo(0, i); ctx.lineTo(1024, i);
+    ctx.stroke();
+  }
+
+  // Yellow dashed lane dividers
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([14, 14]);
+  ctx.beginPath();
+  ctx.moveTo(512, 0); ctx.lineTo(512, 1024);
+  ctx.moveTo(0, 512); ctx.lineTo(1024, 512);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+}
+
+// Pre-create shared procedural textures
+const texSkyscraperTech = createSkyscraperTexture('#0f172a', '#38bdf8', 0.6);
+const texSkyscraperCommercial = createSkyscraperTexture('#1e293b', '#0284c7', 0.45);
+const texResidential = createResidentialFacadeTexture();
+const texRubble = createRubbleDisasterTexture();
+const texHelipad = createHelipadMarkingTexture();
+const texAsphalt = createAsphaltRoadTexture();
+
 function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
   const group = new THREE.Group();
   group.name = modelId;
@@ -536,80 +729,125 @@ function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
   const cz = (minZ + maxZ) / 2;
 
   if (type === 'nw') {
-    // Tech District: 4 High-Rise Skyscraper Towers with illuminated accents
+    // Tech District: 4 High-Rise Skyscraper Towers with illuminated office windows & glass crowns
     const configs = [
-      { dx: -11, dz: -11, w: 12, d: 12, h: 26, color: 0x334155, em: 0x0284c7 },
-      { dx: 11, dz: -9, w: 14, d: 10, h: 20, color: 0x475569, em: 0x06b6d4 },
-      { dx: -9, dz: 11, w: 10, d: 14, h: 22, color: 0x3b82f6, em: 0x38bdf8 },
-      { dx: 11, dz: 11, w: 12, d: 12, h: 16, color: 0x64748b, em: 0x0ea5e9 },
+      { dx: -11, dz: -11, w: 13, d: 13, h: 28, em: 0x0284c7 },
+      { dx: 11, dz: -9, w: 14, d: 11, h: 22, em: 0x06b6d4 },
+      { dx: -9, dz: 11, w: 11, d: 14, h: 24, em: 0x38bdf8 },
+      { dx: 11, dz: 11, w: 13, d: 13, h: 18, em: 0x0ea5e9 },
     ];
     configs.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.2, roughness: 0.5 });
+      const mat = new THREE.MeshStandardMaterial({
+        map: texSkyscraperTech,
+        metalness: 0.35,
+        roughness: 0.3,
+        side: THREE.DoubleSide
+      });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
       group.add(b);
 
-      const antGeo = new THREE.CylinderGeometry(0.2, 0.35, 6, 8);
+      // Rooftop HVAC unit
+      const hvacGeo = new THREE.BoxGeometry(c.w * 0.5, 1.8, c.d * 0.5);
+      const hvacMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.7, roughness: 0.4 });
+      const hvac = new THREE.Mesh(hvacGeo, hvacMat);
+      hvac.position.set(cx + c.dx, c.h + 0.9, cz + c.dz);
+      group.add(hvac);
+
+      // Antenna mast with blinking warning light
+      const antGeo = new THREE.CylinderGeometry(0.18, 0.3, 7, 8);
       const antMat = new THREE.MeshBasicMaterial({ color: c.em });
       const ant = new THREE.Mesh(antGeo, antMat);
-      ant.position.set(cx + c.dx, c.h + 3, cz + c.dz);
+      ant.position.set(cx + c.dx, c.h + 4.5, cz + c.dz);
       group.add(ant);
     });
   } else if (type === 'ne') {
     // Commercial District: Stepped Glass Towers & Heli-deck
     const configs = [
-      { dx: 0, dz: 0, w: 18, d: 18, h: 24, color: 0x475569 },
-      { dx: -12, dz: 12, w: 10, d: 10, h: 18, color: 0x64748b },
-      { dx: 12, dz: -12, w: 12, d: 10, h: 15, color: 0x334155 },
+      { dx: 0, dz: 0, w: 18, d: 18, h: 24 },
+      { dx: -12, dz: 12, w: 11, d: 11, h: 18 },
+      { dx: 12, dz: -12, w: 13, d: 11, h: 16 },
     ];
     configs.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.2, roughness: 0.5 });
+      const mat = new THREE.MeshStandardMaterial({
+        map: texSkyscraperCommercial,
+        metalness: 0.4,
+        roughness: 0.3,
+        side: THREE.DoubleSide
+      });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
       group.add(b);
     });
-    const heliGeo = new THREE.CylinderGeometry(6, 6, 0.4, 16);
-    const heliMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.5 });
+
+    // Detailed Rooftop Helipad
+    const heliGeo = new THREE.CylinderGeometry(6.5, 6.5, 0.5, 32);
+    const heliMat = new THREE.MeshStandardMaterial({ map: texHelipad, roughness: 0.4, metalness: 0.2 });
     const heli = new THREE.Mesh(heliGeo, heliMat);
-    heli.position.set(cx, 24.2, cz);
+    heli.position.set(cx, 24.25, cz);
+    heli.receiveShadow = true;
     group.add(heli);
   } else if (type === 'sw') {
-    // Residential Blocks: 5-Storey Complex
+    // Residential Blocks: 5-Storey Complex with Balconies & Facades
     const offsets = [
-      { dx: -11, dz: -10, w: 16, d: 8, h: 14 },
-      { dx: 11, dz: -10, w: 14, d: 8, h: 14 },
-      { dx: -11, dz: 10, w: 16, d: 8, h: 12 },
-      { dx: 11, dz: 10, w: 14, d: 8, h: 12 },
+      { dx: -11, dz: -10, w: 16, d: 9, h: 15 },
+      { dx: 11, dz: -10, w: 15, d: 9, h: 15 },
+      { dx: -11, dz: 10, w: 16, d: 9, h: 13 },
+      { dx: 11, dz: 10, w: 15, d: 9, h: 13 },
     ];
     offsets.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.6, metalness: 0.1 });
+      const mat = new THREE.MeshStandardMaterial({
+        map: texResidential,
+        roughness: 0.5,
+        metalness: 0.1,
+        side: THREE.DoubleSide
+      });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
       group.add(b);
+
+      // Rooftop water tank
+      const tankGeo = new THREE.CylinderGeometry(1.8, 1.8, 3.2, 16);
+      const tankMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.6, roughness: 0.3 });
+      const tank = new THREE.Mesh(tankGeo, tankMat);
+      tank.position.set(cx + c.dx - 3, c.h + 1.6, cz + c.dz - 1);
+      group.add(tank);
     });
   } else if (type === 'se') {
-    // Disaster / Ruined Zone: Collapsed Angular Pillars & Rubble Blocks
+    // Disaster / Ruined Zone: Collapsed Angular Pillars & Hazard Rubble Blocks
     const ruins = [
-      { dx: -9, dz: -9, w: 12, d: 10, h: 14, rotZ: 0.12 },
-      { dx: 11, dz: -6, w: 10, d: 12, h: 10, rotX: -0.15 },
-      { dx: -6, dz: 11, w: 14, d: 8, h: 8, rotZ: -0.08 },
-      { dx: 11, dz: 11, w: 8, d: 8, h: 16, rotX: 0.1 },
+      { dx: -9, dz: -9, w: 13, d: 11, h: 15, rotZ: 0.14 },
+      { dx: 11, dz: -6, w: 11, d: 13, h: 11, rotX: -0.16 },
+      { dx: -6, dz: 11, w: 15, d: 9, h: 9, rotZ: -0.09 },
+      { dx: 11, dz: 11, w: 9, d: 9, h: 17, rotX: 0.12 },
     ];
     ruins.forEach(r => {
       const geo = new THREE.BoxGeometry(r.w, r.h, r.d);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.7, metalness: 0.1 });
+      const mat = new THREE.MeshStandardMaterial({
+        map: texRubble,
+        roughness: 0.7,
+        metalness: 0.15,
+        side: THREE.DoubleSide
+      });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + r.dx, r.h / 2, cz + r.dz);
       if (r.rotX) b.rotation.x = r.rotX;
       if (r.rotZ) b.rotation.z = r.rotZ;
       b.castShadow = true; b.receiveShadow = true;
       group.add(b);
+
+      // Red hazard alert beacon
+      const hazardGeo = new THREE.SphereGeometry(0.6, 12, 12);
+      const hazardMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+      const hazard = new THREE.Mesh(hazardGeo, hazardMat);
+      hazard.position.set(cx + r.dx, r.h + 0.6, cz + r.dz);
+      group.add(hazard);
     });
   }
 
@@ -626,16 +864,16 @@ function setupEnvironmentComposition() {
   envGroup = new THREE.Group();
   editableModelGroups.length = 0;
 
-  // 1. Full 10x10 Area Asphalt Ground Base
+  // 1. Full 10x10 Area Asphalt Ground Base with Road Grid Textures
   const zoneGeo = new THREE.PlaneGeometry(worldSize, worldSize);
-  const zoneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8, metalness: 0.2 });
+  const zoneMat = new THREE.MeshStandardMaterial({ map: texAsphalt, roughness: 0.75, metalness: 0.2 });
   const zonePlane = new THREE.Mesh(zoneGeo, zoneMat);
   zonePlane.rotation.x = -Math.PI / 2;
   zonePlane.position.set(worldSize / 2, 0.0, worldSize / 2);
   zonePlane.receiveShadow = true;
   envGroup.add(zonePlane);
 
-  // 2. Center SciFi Statue Plaza (Center of 10x10 Grid: [50, 0, 50])
+  // 2. Center SciFi Plaza (Center of 10x10 Grid: [50, 0, 50])
   const plazaGeo = new THREE.CylinderGeometry(8.5, 9.0, 0.6, 32);
   const plazaMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.3 });
   const plaza = new THREE.Mesh(plazaGeo, plazaMat);
@@ -645,14 +883,21 @@ function setupEnvironmentComposition() {
 
   const plazaRingGeo = new THREE.RingGeometry(7.5, 8.3, 32);
   plazaRingGeo.rotateX(-Math.PI / 2);
-  const plazaRingMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+  const plazaRingMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
   const plazaRing = new THREE.Mesh(plazaRingGeo, plazaRingMat);
   plazaRing.position.set(worldSize / 2, 0.62, worldSize / 2);
   envGroup.add(plazaRing);
 
+  // Central Hologram Pillar
+  const holPillarGeo = new THREE.CylinderGeometry(1.2, 1.8, 14, 16);
+  const holPillarMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8, roughness: 0.2 });
+  const holPillar = new THREE.Mesh(holPillarGeo, holPillarMat);
+  holPillar.position.set(worldSize / 2, 7.0, worldSize / 2);
+  envGroup.add(holPillar);
+
   // Center Statue Spotlight
-  const statueLight = new THREE.PointLight(0x06b6d4, 4.0, 30);
-  statueLight.position.set(worldSize / 2, 8.0, worldSize / 2);
+  const statueLight = new THREE.PointLight(0x06b6d4, 6.0, 45);
+  statueLight.position.set(worldSize / 2, 12.0, worldSize / 2);
   envGroup.add(statueLight);
 
   if (statueMesh) {
