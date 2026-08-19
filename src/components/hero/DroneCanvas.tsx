@@ -44,9 +44,9 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
             const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
             mats.forEach((mat: any) => {
               if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
-                mat.roughness = 0.35;
-                mat.metalness = 0.3;
-                mat.envMapIntensity = 1.6;
+                mat.roughness = 0.5;
+                mat.metalness = 0.05;
+                mat.envMapIntensity = 0.0;
                 mat.needsUpdate = true;
               }
             });
@@ -251,12 +251,13 @@ export const DroneCanvas: React.FC<DroneCanvasProps> = ({
         style={{ background: 'transparent' }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       >
-        <ambientLight intensity={2.2} />
-        <hemisphereLight args={['#ffffff', '#0f172a', 2.0]} />
-        <directionalLight position={[10, 15, 10]} intensity={3.0} />
-        <directionalLight position={[-10, -5, -5]} intensity={1.5} color="#94a3b8" />
-        <pointLight position={[0, 5, 4]} intensity={2.0} color="#38bdf8" />
-        <pointLight position={[0, -5, 2]} intensity={1.2} color="#0d9488" />
+        <ambientLight intensity={3.0} />
+        <hemisphereLight args={['#ffffff', '#334155', 2.5]} />
+        <directionalLight position={[10, 15, 10]} intensity={4.0} />
+        <directionalLight position={[-10, 10, -5]} intensity={2.5} color="#e0f2fe" />
+        <directionalLight position={[0, -5, 5]} intensity={1.5} color="#bae6fd" />
+        <pointLight position={[0, 4, 4]} intensity={2.5} color="#38bdf8" />
+        <pointLight position={[0, -4, 2]} intensity={1.5} color="#0d9488" />
 
         <Suspense fallback={<DroneFallback />}>
           <DroneModel mouseRef={mouseRef} techProgress={techProgress} modelPath={modelPath} />

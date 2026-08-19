@@ -162,6 +162,9 @@ async function init() {
     }
   };
 
+  if (!droneTemplate) droneTemplate = createDroneFallback();
+  if (!personTemplate) personTemplate = createPersonFallback();
+
   setupEnvironmentComposition();
   setupSurvivors();
   setupDrones();
@@ -796,7 +799,8 @@ function setupSurvivors(customLayout = null) {
   });
 
   initSurv.forEach(pos => {
-    const clone = personTemplate.clone(true);
+    const template = personTemplate || createPersonFallback();
+    const clone = template.clone(true);
     const [r, c] = pos;
     const worldX = (c + 0.5) * cellSize;
     const worldZ = (r + 0.5) * cellSize;
@@ -914,7 +918,8 @@ function setupDrones() {
     const agentName = `agent_${i}`;
     const colorHex = AGENT_COLORS[i % AGENT_COLORS.length];
 
-    const clone = droneTemplate.clone(true);
+    const template = droneTemplate || createDroneFallback();
+    const clone = template.clone(true);
     const bBox = new THREE.Box3().setFromObject(clone);
     const sz = bBox.getSize(new THREE.Vector3());
     const maxDim = Math.max(sz.x, sz.y, sz.z);
