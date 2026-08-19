@@ -1,0 +1,11 @@
+Model Information:
+* title:	5 storey residential building
+* source:	https://sketchfab.com/3d-models/5-storey-residential-building-3468ccfd9e35495fb377f7c6d67518ae
+* author:	bean(alwayshasbean) (https://sketchfab.com/alwayshasbean)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "5 storey residential building" (https://sketchfab.com/3d-models/5-storey-residential-building-3468ccfd9e35495fb377f7c6d67518ae) by bean(alwayshasbean) (https://sketchfab.com/alwayshasbean) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

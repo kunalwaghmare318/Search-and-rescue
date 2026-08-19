@@ -1,0 +1,8 @@
+Model Information:
+* title:	Brutalist Building
+* source:	https://sketchfab.com/3d-models/brutalist-building-6152ae20f9334de581325bbf737eb351
+* author:	abhayexe (https://sketchfab.com/abhayexe)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
