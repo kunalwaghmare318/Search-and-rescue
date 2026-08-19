@@ -146,33 +146,37 @@ function setHtml(el, val) {
 // INITIALIZATION (INSTANT RENDER + BACKGROUND ASSET UPGRADE)
 // ==============================================================================
 async function init() {
-  setupThreeScene();
-  setupEventListeners();
+  try {
+    setupThreeScene();
+    setupEventListeners();
 
-  // 1. Render immediately with base state (0ms delay!)
-  replayData = {
-    metadata: { grid_size: 10, cell_size_meters: 10.0, num_agents: 5 },
-    initial_state: {
-      agent_positions: { agent_0: [0, 0], agent_1: [2, 2], agent_2: [1, 3], agent_3: [4, 0], agent_4: [5, 2] },
-      agent_altitudes: { agent_0: 0, agent_1: 0, agent_2: 0, agent_3: 0, agent_4: 0 },
-      survivor_positions: [[2, 3], [4, 5], [7, 2], [8, 8], [1, 7], [6, 4], [3, 8], [8, 3], [5, 6], [2, 8]],
-      hidden_survivors: [[8, 8], [6, 4], [8, 3], [2, 8]],
-      open_survivors: [[2, 3], [4, 5], [7, 2], [1, 7], [3, 8], [5, 6]],
-      obstacle_positions: []
+    // 1. Render immediately with base state (0ms delay!)
+    replayData = {
+      metadata: { grid_size: 10, cell_size_meters: 10.0, num_agents: 5 },
+      initial_state: {
+        agent_positions: { agent_0: [0, 0], agent_1: [2, 2], agent_2: [1, 3], agent_3: [4, 0], agent_4: [5, 2] },
+        agent_altitudes: { agent_0: 0, agent_1: 0, agent_2: 0, agent_3: 0, agent_4: 0 },
+        survivor_positions: [[2, 3], [4, 5], [7, 2], [8, 8], [1, 7], [6, 4], [3, 8], [8, 3], [5, 6], [2, 8]],
+        hidden_survivors: [[8, 8], [6, 4], [8, 3], [2, 8]],
+        open_survivors: [[2, 3], [4, 5], [7, 2], [1, 7], [3, 8], [5, 6]],
+        obstacle_positions: []
+      }
+    };
+
+    if (!droneTemplate) droneTemplate = createDroneFallback();
+    if (!personTemplate) personTemplate = createPersonFallback();
+
+    setupEnvironmentComposition();
+    setupSurvivors();
+    setupDrones();
+    setupUI();
+    animate();
+  } catch (err) {
+    console.error('Initialization error caught safely:', err);
+  } finally {
+    if (loadingScreen) {
+      loadingScreen.classList.add('hidden');
     }
-  };
-
-  if (!droneTemplate) droneTemplate = createDroneFallback();
-  if (!personTemplate) personTemplate = createPersonFallback();
-
-  setupEnvironmentComposition();
-  setupSurvivors();
-  setupDrones();
-  setupUI();
-  animate();
-
-  if (loadingScreen) {
-    loadingScreen.classList.add('hidden');
   }
 
   // 2. Connect to Live API or fallback log asynchronously
@@ -1262,9 +1266,9 @@ function setupUI() {
 }
 
 function setupEventListeners() {
-  btnPlay.addEventListener('click', toggleReplayPlay);
-  btnReset.addEventListener('click', resetAll);
-  btnReplay.addEventListener('click', startLiveSimulation);
+  if (btnPlay) btnPlay.addEventListener('click', toggleReplayPlay);
+  if (btnReset) btnReset.addEventListener('click', resetAll);
+  if (btnReplay) btnReplay.addEventListener('click', startLiveSimulation);
 
   if (btnEditLayout) {
     btnEditLayout.addEventListener('click', toggleEditLayoutMode);
@@ -1393,27 +1397,31 @@ function setupEventListeners() {
   }
 
   // 1. RANDOMIZE HUMAN POSITIONS (INSTANT 0MS RESPONSE, FIXED 10 HUMANS FOR OPTIMAL PERFORMANCE)
-  btnRandomizeHumans.addEventListener('click', () => {
-    const randomSet = generateRandomHumans(10);
+  if (btnRandomizeHumans) {
+    btnRandomizeHumans.addEventListener('click', () => {
+      const randomSet = generateRandomHumans(10);
 
-    // Instant local 3D rendering (0ms lag!)
-    setupSurvivors({ survivors: randomSet.survivors, hidden_survivors: randomSet.hidden_survivors });
-    updateSurvivorGlowState(0);
-    showToast('Randomized 10 human target placements', 'survivor');
+      // Instant local 3D rendering (0ms lag!)
+      setupSurvivors({ survivors: randomSet.survivors, hidden_survivors: randomSet.hidden_survivors });
+      updateSurvivorGlowState(0);
+      showToast('Randomized 10 human target placements', 'survivor');
 
-    // Non-blocking background API sync with 500ms timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 500);
-    fetch(`${API_BASE_URL}/randomize`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ count: 10, survivors: randomSet.survivors, hidden_survivors: randomSet.hidden_survivors }),
-      signal: controller.signal
-    }).then(() => clearTimeout(timeoutId)).catch(() => {});
-  });
+      // Non-blocking background API sync with 500ms timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 500);
+      fetch(`${API_BASE_URL}/randomize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: 10, survivors: randomSet.survivors, hidden_survivors: randomSet.hidden_survivors }),
+        signal: controller.signal
+      }).then(() => clearTimeout(timeoutId)).catch(() => {});
+    });
+  }
 
   // 2. START LIVE SIMULATION (Drives real-time PPO model inference)
-  btnStartLive.addEventListener('click', startLiveSimulation);
+  if (btnStartLive) {
+    btnStartLive.addEventListener('click', startLiveSimulation);
+  }
 
   // 3. MANUAL SELF-DESTRUCT / KILL DRONE TRIGGER
   if (btnKillDrone) {
