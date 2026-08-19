@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIHANG - Search & Rescue + Area Mapping Simulation</title>
+  <meta name="description" content="3D live visualization of multi-agent search and rescue drone simulation with area mapping mode">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=v11">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="loader-spinner"></div>
+      <h2>VIHANG</h2>
+      <p class="loader-subtitle">Initializing 3D Disaster Zone Environment...</p>
+      <div class="loader-progress">
+        <div class="loader-bar" id="loader-bar"></div>
+      </div>
+      <p class="loader-status" id="loader-status">Loading assets & models...</p>
+      <div id="asset-warnings"></div>
+      <button id="btn-skip-loader" onclick="document.getElementById('loading-screen').classList.add('hidden')" style="margin-top:16px; padding:8px 20px; background:rgba(13,148,136,0.25); border:1px solid #0d9488; color:#2dd4bf; border-radius:8px; cursor:pointer; font-family:inherit; font-size:0.82rem; font-weight:600; transition:all 0.2s;">▶ Skip & Enter Workspace</button>
+    </div>
+  </div>
+
+  <!-- Main Scene -->
+  <div id="app">
+    <canvas id="scene-canvas"></canvas>
+
+    <!-- Top HUD -->
+    <div class="hud-top">
+      <div class="hud-logo">
+        <span class="logo-icon">&#9670;</span>
+        <span class="logo-text">VIHANG</span>
+        <span class="logo-badge" id="mode-badge">LIVE SIMULATION</span>
+        <a href="/" class="btn-back-hero" title="Return to Hero Landing Page">
+          <span class="back-icon">&#8592;</span> HERO PAGE
+        </a>
+      </div>
+
+      <!-- Mode Toggle Tabs -->
+      <div class="mode-tabs" id="mode-tabs">
+        <button class="mode-tab active" id="tab-rescue" data-mode="rescue">
+          <span class="tab-icon">&#128270;</span> Search & Rescue
+        </button>
+        <button class="mode-tab" id="tab-mapping" data-mode="mapping">
+          <span class="tab-icon">&#128506;</span> Area Mapping
+        </button>
+      </div>
+
+      <div class="hud-right-group">
+        <div class="hud-step" id="hud-step">STEP 0 / --</div>
+        <div class="hud-time" id="hud-time">00:00 / 00:00</div>
+      </div>
+    </div>
+
+    <!-- Rescue Mode Controls (existing) -->
+    <div class="hud-center-action-bar" id="rescue-controls">
+      <button class="btn-action" id="btn-edit-layout" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); border: 1px solid #a855f7; color:#ffffff;" title="Interactively Move, Rotate & Scale City Models">
+        <span class="btn-icon">🛠️</span> Edit City Layout
+      </button>
+      <button class="btn-action" id="btn-randomize-humans" title="Randomize 10 Human Placements">
+        <span class="btn-icon">&#127922;</span> Randomize Humans
+      </button>
+      <button class="btn-action btn-primary-action" id="btn-start-live" title="Start Live PPO Model Inference">
+        <span class="btn-icon">&#9654;</span> Start Live Simulation
+      </button>
+      <div class="kill-drone-group">
+        <select id="select-kill-drone" class="select-drone-dropdown" title="Select Drone to Trigger Failure">
+          <option value="agent_0">AGENT_0</option>
+          <option value="agent_1">AGENT_1</option>
+          <option value="agent_2" selected>AGENT_2</option>
+          <option value="agent_3">AGENT_3</option>
+          <option value="agent_4">AGENT_4</option>
+        </select>
+        <button class="btn-action btn-kill-action" id="btn-kill-drone" disabled title="Trigger Manual Self-Destruct / Failure">
+          <span class="btn-icon">&#9888;</span> Self-Destruct Drone
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Gizmo Layout Editor Sub-Bar (Shown ONLY when Layout Editing is active) -->
+    <div class="hidden" id="edit-layout-toolbar" style="position: fixed; top: 150px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.95); border: 1.5px solid rgba(139, 92, 246, 0.7); border-radius: 14px; padding: 8px 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 20px rgba(139,92,246,0.3); backdrop-filter: blur(12px);">
+      <span style="font-size: 11px; color: #a78bfa; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Gizmo Tool:</span>
+      <button class="btn-action" id="gizmo-mode-translate" style="background:#3b82f6; border-color:#60a5fa;" title="Move Model (T Key)">↕️ Move (T)</button>
+      <button class="btn-action" id="gizmo-mode-rotate" title="Rotate Model (R Key)">🔄 Rotate (R)</button>
+      <button class="btn-action" id="gizmo-mode-scale" title="Scale / Resize Model (S Key)">🔍 Scale (S)</button>
+      <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.15); color: #cbd5e1; font-size: 12px; font-weight: 500;">
+        <span>Size:</span>
+        <input type="range" id="model-size-slider" min="0.2" max="3.0" step="0.05" value="1.0" style="width: 100px; cursor: pointer;" title="Adjust selected model scale size">
+        <span id="model-size-val" style="color: #a78bfa; font-weight: 700; min-width: 36px;">1.00x</span>
+      </div>
+    </div>
+
+    <!-- Mapping Mode Controls -->
+    <div class="hud-center-action-bar hidden" id="mapping-controls">
+      <button class="btn-action btn-mapping-action" id="btn-start-mapping" title="Start Area Mapping">
+        <span class="btn-icon">&#128752;</span> Start Mapping
+      </button>
+      <button class="btn-action btn-mapping-action" id="btn-open-3d-viewer" style="background: linear-gradient(135deg, #0284c7, #06b6d4);" title="Open Interactive 3D Map Inspector">
+        <span class="btn-icon">🔍</span> Inspect 3D Map
+      </button>
+    </div>
+
+    <!-- Event Toast Container -->
+    <div class="event-toast-container" id="event-toast-container"></div>
+
+    <!-- Follow Drone HUD Banner -->
+    <div class="follow-hud-card hidden" id="follow-hud-card">
+      <div class="follow-card-header">
+        <div class="follow-drone-badge">
+          <span class="follow-dot" id="follow-dot"></span>
+          <span class="follow-title" id="follow-title">FOLLOWING AGENT_0</span>
+        </div>
+        <button class="btn-exit-follow" id="btn-exit-follow" title="Exit Follow Mode & Return to Free Camera">
+          <span>&#10005;</span> Exit Follow View
+        </button>
+      </div>
+      <div class="follow-card-body">
+        <div class="follow-stat">
+          <span class="follow-label">STATUS</span>
+          <span class="follow-value status-active" id="follow-status">THERMAL SEARCH ACTIVE</span>
+        </div>
+        <div class="follow-stat">
+          <span class="follow-label">GRID POS</span>
+          <span class="follow-value" id="follow-pos">[0, 0]</span>
+        </div>
+        <div class="follow-stat">
+          <span class="follow-label">ALTITUDE</span>
+          <span class="follow-value">10.0m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat Sidebar (Rescue Mode) -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <h3>MISSION STATUS</h3>
+        <div class="stat-row">
+          <span class="stat-label">Survivors Located</span>
+          <span class="stat-value" id="stat-survivors">0 Located</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Grid Coverage</span>
+          <span class="stat-value" id="stat-coverage">0.0%</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Collisions</span>
+          <span class="stat-value" id="stat-collisions">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Active Agents</span>
+          <span class="stat-value" id="stat-agents">0</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>HUMAN TARGETS (UNKNOWN TOTAL)</h3>
+        <div class="target-legend">
+          <span class="legend-item"><span class="legend-dot red"></span> Unfound (Scanning Area)</span>
+          <span class="legend-item"><span class="legend-dot green"></span> Discovered & Located</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>ENVIRONMENT & RADII</h3>
+        <div class="stat-row">
+          <span class="stat-label">Grid Size</span>
+          <span class="stat-value" id="stat-grid">--</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Cell Scale</span>
+          <span class="stat-value" id="stat-scale">-- m</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Open Detection</span>
+          <span class="stat-value" id="stat-detection-open">1.5 cells (15m)</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Thermal Occluded</span>
+          <span class="stat-value" id="stat-detection-thermal">1.8 cells (18m)</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Building Obstacles</span>
+          <span class="stat-value" id="stat-buildings">6</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section" id="agent-list-section">
+        <h3>AGENTS</h3>
+        <div id="agent-list"></div>
+      </div>
+    </div>
+
+    <!-- Stat Sidebar (Mapping Mode) -->
+    <div class="sidebar hidden" id="sidebar-mapping">
+      <div class="sidebar-section">
+        <h3>3D MAPPING STATUS</h3>
+        <div class="stat-row">
+          <span class="stat-label">3D Surface Coverage</span>
+          <span class="stat-value" id="stat-scan-pct">0.0%</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Discovered 3D Points</span>
+          <span class="stat-value" id="stat-3d-pts">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Step</span>
+          <span class="stat-value" id="stat-map-step">0 / 150</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">3D LiDAR Range</span>
+          <span class="stat-value" id="stat-lidar-range">22.0 meters</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>3D POINT CLOUD LEGEND</h3>
+        <div class="target-legend">
+          <span class="legend-item"><span class="legend-dot open-cell"></span> Ground Surface Hits</span>
+          <span class="legend-item"><span class="legend-dot obstacle-cell"></span> Building Wall Hits</span>
+          <span class="legend-item"><span class="legend-dot building-cell"></span> Roof & Tower Hits</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>DRONES</h3>
+        <div id="mapping-agent-list"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>POLICY NOTE</h3>
+        <p class="policy-note">Using 3D frontier raycasting exploration. The trained PPO policy is for survivor-search only.</p>
+      </div>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="controls" id="controls">
+      <button class="ctrl-btn" id="btn-reset" title="Reset Simulation">&#8634;</button>
+      <button class="ctrl-btn ctrl-primary" id="btn-play" title="Play / Pause Replay">&#9654;</button>
+      <div class="progress-bar-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+        <input type="range" class="progress-slider" id="progress-slider" min="0" max="100" value="0">
+      </div>
+      <div class="speed-controls">
+        <button class="speed-btn active" data-speed="1">1x</button>
+        <button class="speed-btn" data-speed="2">2x</button>
+        <button class="speed-btn" data-speed="4">4x</button>
+      </div>
+    </div>
+
+    <!-- Post-Simulation Stats Modal (Rescue) -->
+    <div class="stats-modal" id="stats-modal">
+      <div class="stats-modal-content">
+        <h2>MISSION COMPLETE</h2>
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-survivors">--</div>
+            <div class="stats-card-label">Total Rescued</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-open-survivors">--</div>
+            <div class="stats-card-label">Open-Area Rescues</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-hidden-survivors">--</div>
+            <div class="stats-card-label">Building-Thermal Rescues</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-coverage">--</div>
+            <div class="stats-card-label">Grid Coverage</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-collisions">--</div>
+            <div class="stats-card-label">Collisions</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="final-steps">--</div>
+            <div class="stats-card-label">Total Steps</div>
+          </div>
+          <div class="stats-card" id="card-failed-recovery" style="display: none;">
+            <div class="stats-card-value" id="final-failed-recovery">--</div>
+            <div class="stats-card-label">Failed Zone Recovery</div>
+          </div>
+        </div>
+        <button class="ctrl-btn ctrl-primary" id="btn-replay">RESTART LIVE SIMULATION</button>
+      </div>
+    </div>
+
+    <!-- Post-Mapping Verification Modal & Dedicated Interactive 3D Viewer -->
+    <div class="stats-modal" id="mapping-verify-modal">
+      <div class="stats-modal-content mapping-modal-wide">
+        <div class="modal-header-row">
+          <h2>3D RECONSTRUCTION & ACCURACY INSPECTOR</h2>
+          <button class="modal-close-btn" id="btn-close-mapping-modal" title="Close Inspector">&times;</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-accuracy">--</div>
+            <div class="stats-card-label">3D Surface Accuracy</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-coverage">--</div>
+            <div class="stats-card-label">3D Scan Coverage</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-steps">--</div>
+            <div class="stats-card-label">Steps Used</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-points">--</div>
+            <div class="stats-card-label">Discovered 3D Points</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-matched">--</div>
+            <div class="stats-card-label">Matched Surface Points</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="verify-total-gt">--</div>
+            <div class="stats-card-label">Ground Truth Surface Points</div>
+          </div>
+        </div>
+
+        <!-- Interactive 3D Map Viewer Component -->
+        <div class="viewer-3d-wrapper">
+          <div class="viewer-3d-toolbar">
+            <div class="toolbar-group">
+              <span class="toolbar-label">CAMERA:</span>
+              <button class="v3d-btn active" id="v3d-view-3d" title="3D Perspective View">🌐 3D</button>
+              <button class="v3d-btn" id="v3d-view-top" title="Top-Down Plan View">🗺️ TOP</button>
+              <button class="v3d-btn" id="v3d-view-front" title="Front Elevation">🏢 FRONT</button>
+              <button class="v3d-btn" id="v3d-view-side" title="Side Elevation">📐 SIDE</button>
+            </div>
+            <div class="toolbar-group">
+              <span class="toolbar-label">COLOR:</span>
+              <button class="v3d-btn active" id="v3d-color-height" title="Height Heatmap">🌈 HEIGHT</button>
+              <button class="v3d-btn" id="v3d-color-type" title="Structure Type">🏷️ TYPE</button>
+            </div>
+            <div class="toolbar-group">
+              <span class="toolbar-label">OVERLAY:</span>
+              <button class="v3d-btn active" id="v3d-toggle-gt" title="Toggle Hidden Ground Truth Boxes">👁️ GROUND TRUTH</button>
+              <button class="v3d-btn" id="v3d-toggle-voxels" title="Toggle Solid Voxel Mesh">🧊 VOXELS</button>
+            </div>
+            <div class="toolbar-group">
+              <button class="v3d-btn" id="v3d-reset-cam" title="Reset Camera View">🔄 RESET</button>
+            </div>
+          </div>
+
+          <div class="viewer-3d-canvas-container" id="viewer-3d-container">
+            <canvas id="canvas-3d-viewer"></canvas>
+            <div class="v3d-instructions">
+              <span>🖱️ Left-Drag: Orbit Rotate | Right-Drag: Pan | Scroll: Zoom</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions-row">
+          <button class="ctrl-btn ctrl-primary" id="btn-restart-mapping">START NEW 3D MAPPING RUN</button>
+          <button class="ctrl-btn ctrl-secondary" id="btn-inspect-3d-map-close">CLOSE INSPECTOR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="main.js?v=v11"></script>
+</body>
+</html>

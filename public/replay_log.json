@@ -1,0 +1,3372 @@
+{
+  "metadata": {
+    "grid_size": 10,
+    "cell_size_meters": 10.0,
+    "num_agents": 5,
+    "num_survivors": 3,
+    "num_obstacles": 8,
+    "max_steps": 100,
+    "detection_radius": 1.5,
+    "personal_space_radius": 2.5,
+    "agent_names": [
+      "agent_0",
+      "agent_1",
+      "agent_2",
+      "agent_3",
+      "agent_4"
+    ]
+  },
+  "initial_state": {
+    "agent_positions": {
+      "agent_0": [
+        8,
+        6
+      ],
+      "agent_1": [
+        2,
+        2
+      ],
+      "agent_2": [
+        1,
+        3
+      ],
+      "agent_3": [
+        4,
+        0
+      ],
+      "agent_4": [
+        5,
+        2
+      ]
+    },
+    "survivor_positions": [
+      [
+        5,
+        4
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "obstacle_positions": [
+      [
+        7,
+        1
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        7,
+        8
+      ]
+    ]
+  },
+  "steps": [
+    {
+      "step": 0,
+      "agent_positions": {
+        "agent_0": [
+          8,
+          6
+        ],
+        "agent_1": [
+          2,
+          2
+        ],
+        "agent_2": [
+          1,
+          3
+        ],
+        "agent_3": [
+          4,
+          0
+        ],
+        "agent_4": [
+          5,
+          2
+        ]
+      },
+      "survivors_remaining": [
+        [
+          5,
+          4
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 1,
+      "agent_positions": {
+        "agent_0": [
+          8,
+          7
+        ],
+        "agent_1": [
+          2,
+          2
+        ],
+        "agent_2": [
+          1,
+          3
+        ],
+        "agent_3": [
+          4,
+          1
+        ],
+        "agent_4": [
+          5,
+          3
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": [
+        {
+          "type": "collision",
+          "agent": "agent_1",
+          "position": [
+            2,
+            2
+          ]
+        },
+        {
+          "type": "collision",
+          "agent": "agent_2",
+          "position": [
+            1,
+            3
+          ]
+        },
+        {
+          "type": "survivor_found",
+          "survivor_position": [
+            5,
+            4
+          ],
+          "found_by": "agent_4"
+        },
+        {
+          "type": "survivor_found",
+          "survivor_position": [
+            4,
+            1
+          ],
+          "found_by": "agent_3"
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          3
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          2
+        ],
+        "agent_4": [
+          5,
+          4
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 3,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          4
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          3
+        ],
+        "agent_4": [
+          5,
+          5
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 4,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          4
+        ],
+        "agent_4": [
+          5,
+          6
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 5,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          5
+        ],
+        "agent_4": [
+          5,
+          7
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 6,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          6
+        ],
+        "agent_4": [
+          5,
+          8
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 7,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          1,
+          4
+        ],
+        "agent_3": [
+          4,
+          7
+        ],
+        "agent_4": [
+          5,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 8,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          2,
+          4
+        ],
+        "agent_3": [
+          4,
+          8
+        ],
+        "agent_4": [
+          5,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 9,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          2,
+          5
+        ],
+        "agent_2": [
+          3,
+          4
+        ],
+        "agent_3": [
+          4,
+          8
+        ],
+        "agent_4": [
+          6,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 10,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          7
+        ],
+        "agent_1": [
+          3,
+          5
+        ],
+        "agent_2": [
+          4,
+          4
+        ],
+        "agent_3": [
+          5,
+          8
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 11,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          6
+        ],
+        "agent_1": [
+          4,
+          5
+        ],
+        "agent_2": [
+          5,
+          4
+        ],
+        "agent_3": [
+          5,
+          7
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 12,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          5
+        ],
+        "agent_1": [
+          5,
+          5
+        ],
+        "agent_2": [
+          6,
+          4
+        ],
+        "agent_3": [
+          5,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 13,
+      "agent_positions": {
+        "agent_0": [
+          7,
+          4
+        ],
+        "agent_1": [
+          6,
+          5
+        ],
+        "agent_2": [
+          6,
+          3
+        ],
+        "agent_3": [
+          5,
+          5
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 14,
+      "agent_positions": {
+        "agent_0": [
+          6,
+          4
+        ],
+        "agent_1": [
+          6,
+          6
+        ],
+        "agent_2": [
+          6,
+          2
+        ],
+        "agent_3": [
+          5,
+          4
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 15,
+      "agent_positions": {
+        "agent_0": [
+          5,
+          4
+        ],
+        "agent_1": [
+          6,
+          7
+        ],
+        "agent_2": [
+          6,
+          1
+        ],
+        "agent_3": [
+          5,
+          5
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 16,
+      "agent_positions": {
+        "agent_0": [
+          4,
+          4
+        ],
+        "agent_1": [
+          6,
+          8
+        ],
+        "agent_2": [
+          6,
+          2
+        ],
+        "agent_3": [
+          5,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 17,
+      "agent_positions": {
+        "agent_0": [
+          4,
+          3
+        ],
+        "agent_1": [
+          6,
+          7
+        ],
+        "agent_2": [
+          6,
+          1
+        ],
+        "agent_3": [
+          5,
+          5
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 18,
+      "agent_positions": {
+        "agent_0": [
+          4,
+          2
+        ],
+        "agent_1": [
+          6,
+          6
+        ],
+        "agent_2": [
+          6,
+          0
+        ],
+        "agent_3": [
+          5,
+          4
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 19,
+      "agent_positions": {
+        "agent_0": [
+          3,
+          2
+        ],
+        "agent_1": [
+          6,
+          5
+        ],
+        "agent_2": [
+          6,
+          0
+        ],
+        "agent_3": [
+          5,
+          3
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 20,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          2
+        ],
+        "agent_1": [
+          5,
+          5
+        ],
+        "agent_2": [
+          6,
+          0
+        ],
+        "agent_3": [
+          4,
+          3
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 21,
+      "agent_positions": {
+        "agent_0": [
+          1,
+          2
+        ],
+        "agent_1": [
+          4,
+          5
+        ],
+        "agent_2": [
+          6,
+          0
+        ],
+        "agent_3": [
+          3,
+          3
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 22,
+      "agent_positions": {
+        "agent_0": [
+          1,
+          1
+        ],
+        "agent_1": [
+          4,
+          6
+        ],
+        "agent_2": [
+          6,
+          0
+        ],
+        "agent_3": [
+          3,
+          4
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 23,
+      "agent_positions": {
+        "agent_0": [
+          1,
+          2
+        ],
+        "agent_1": [
+          4,
+          7
+        ],
+        "agent_2": [
+          6,
+          1
+        ],
+        "agent_3": [
+          3,
+          5
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 24,
+      "agent_positions": {
+        "agent_0": [
+          1,
+          3
+        ],
+        "agent_1": [
+          4,
+          8
+        ],
+        "agent_2": [
+          6,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 25,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          3
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 26,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 27,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 28,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 29,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 30,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 31,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 32,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 33,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 34,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 35,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 36,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 37,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 38,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 39,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 40,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 41,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 42,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 43,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 44,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 45,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 46,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 47,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 48,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 49,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 50,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 51,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 52,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 53,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 54,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 55,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 56,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 57,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 58,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 59,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 60,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 61,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 62,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 63,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 64,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 65,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 66,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 67,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 68,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 69,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 70,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 71,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 72,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 73,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 74,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 75,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 76,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 77,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 78,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 79,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 80,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 81,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 82,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 83,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 84,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 85,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 86,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 87,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 88,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 89,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 90,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 91,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 92,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 93,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 94,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 95,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 96,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 97,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 98,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 99,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          5
+        ],
+        "agent_1": [
+          5,
+          8
+        ],
+        "agent_2": [
+          7,
+          2
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    },
+    {
+      "step": 100,
+      "agent_positions": {
+        "agent_0": [
+          2,
+          4
+        ],
+        "agent_1": [
+          5,
+          9
+        ],
+        "agent_2": [
+          7,
+          3
+        ],
+        "agent_3": [
+          3,
+          6
+        ],
+        "agent_4": [
+          7,
+          9
+        ]
+      },
+      "survivors_remaining": [
+        [
+          0,
+          9
+        ]
+      ],
+      "events": []
+    }
+  ],
+  "summary": {
+    "total_steps": 100,
+    "final_coverage_pct": 49.0,
+    "survivors_found": 2,
+    "survivors_total": 3
+  }
+}
