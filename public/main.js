@@ -143,67 +143,68 @@ function setHtml(el, val) {
 }
 
 // ==============================================================================
-// INITIALIZATION
+// INITIALIZATION (INSTANT RENDER + BACKGROUND ASSET UPGRADE)
 // ==============================================================================
 async function init() {
   setupThreeScene();
   setupEventListeners();
 
-  // Safety timer: ALWAYS dismiss loading screen after 4 seconds maximum
-  setTimeout(() => {
-    if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
-      loadingScreen.classList.add('hidden');
+  // 1. Render immediately with base state (0ms delay!)
+  replayData = {
+    metadata: { grid_size: 10, cell_size_meters: 10.0, num_agents: 5 },
+    initial_state: {
+      agent_positions: { agent_0: [0, 0], agent_1: [2, 2], agent_2: [1, 3], agent_3: [4, 0], agent_4: [5, 2] },
+      agent_altitudes: { agent_0: 0, agent_1: 0, agent_2: 0, agent_3: 0, agent_4: 0 },
+      survivor_positions: [[2, 3], [4, 5], [7, 2], [8, 8], [1, 7], [6, 4], [3, 8], [8, 3], [5, 6], [2, 8]],
+      hidden_survivors: [[8, 8], [6, 4], [8, 3], [2, 8]],
+      open_survivors: [[2, 3], [4, 5], [7, 2], [1, 7], [3, 8], [5, 6]],
+      obstacle_positions: []
     }
-  }, 4000);
+  };
 
-  try {
-    updateLoader(20, 'Loading 3D assets...');
-    await loadAssets();
+  setupEnvironmentComposition();
+  setupSurvivors();
+  setupDrones();
+  setupUI();
+  animate();
 
-    updateLoader(70, 'Connecting to Live API / Fallback Log...');
-    let apiOnline = false;
+  if (loadingScreen) {
+    loadingScreen.classList.add('hidden');
+  }
 
+  // 2. Connect to Live API or fallback log asynchronously
+  (async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/start`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         replayData = data;
-        apiOnline = true;
+        setupSurvivors();
+        setupDrones();
       }
     } catch (e) {
-      console.log('Live API offline. Loading fallback replay log:', e);
-    }
-
-    if (!apiOnline) {
       try {
         const resLog = await fetch('replay_log.json');
-        replayData = await resLog.json();
-      } catch (e2) {
-        console.log('Fallback log missing, initializing blank:', e2);
-        replayData = { metadata: { grid_size: 10, num_agents: 5 }, steps: [] };
-      }
+        if (resLog.ok) {
+          replayData = await resLog.json();
+          setupSurvivors();
+          setupDrones();
+        }
+      } catch (e2) {}
     }
+  })();
 
-    updateLoader(90, 'Composing unified 3D environment...');
-    setupEnvironmentComposition();
-    setupSurvivors();
+  // 3. Load GLTF models in background and upgrade scene seamlessly
+  loadAssets().then(() => {
+    if (envGroup) {
+      scene.remove(envGroup);
+      setupEnvironmentComposition();
+    }
     setupDrones();
-    setupUI();
-
-    updateLoader(100, 'Ready!');
-    setTimeout(() => { if (loadingScreen) loadingScreen.classList.add('hidden'); }, 300);
-
-    animate();
-  } catch (err) {
-    console.error('Initialization fallback activated:', err);
-    if (!replayData) replayData = { metadata: { grid_size: 10, cell_size_meters: 10.0, num_agents: 5 }, initial_state: { agent_positions: { agent_0:[0,0], agent_1:[2,2], agent_2:[1,3], agent_3:[4,0], agent_4:[5,2] }, survivor_positions: [], hidden_survivors: [], obstacle_positions: [] } };
-    setupEnvironmentComposition();
     setupSurvivors();
-    setupDrones();
-    setupUI();
-    if (loadingScreen) loadingScreen.classList.add('hidden');
-    animate();
-  }
+  }).catch((e) => {
+    console.log('Background asset load completed with fallbacks:', e);
+  });
 }
 
 function updateLoader(pct, text) {
@@ -542,9 +543,99 @@ function toggleEditLayoutMode() {
   }
 }
 
+function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
+  const group = new THREE.Group();
+  group.name = modelId;
+
+  const cx = (minX + maxX) / 2;
+  const cz = (minZ + maxZ) / 2;
+
+  if (type === 'nw') {
+    // Tech District: 4 High-Rise Skyscraper Towers
+    const configs = [
+      { dx: -11, dz: -11, w: 12, d: 12, h: 26, color: 0x1e293b, em: 0x0284c7 },
+      { dx: 11, dz: -9, w: 14, d: 10, h: 20, color: 0x0f172a, em: 0x06b6d4 },
+      { dx: -9, dz: 11, w: 10, d: 14, h: 22, color: 0x1e293b, em: 0x38bdf8 },
+      { dx: 11, dz: 11, w: 12, d: 12, h: 16, color: 0x334155, em: 0x0ea5e9 },
+    ];
+    configs.forEach(c => {
+      const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
+      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.8, roughness: 0.25 });
+      const b = new THREE.Mesh(geo, mat);
+      b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
+      b.castShadow = true; b.receiveShadow = true;
+      group.add(b);
+
+      const antGeo = new THREE.CylinderGeometry(0.2, 0.35, 6, 8);
+      const antMat = new THREE.MeshBasicMaterial({ color: c.em });
+      const ant = new THREE.Mesh(antGeo, antMat);
+      ant.position.set(cx + c.dx, c.h + 3, cz + c.dz);
+      group.add(ant);
+    });
+  } else if (type === 'ne') {
+    // Commercial District: Stepped Glass Towers & Heli-deck
+    const configs = [
+      { dx: 0, dz: 0, w: 18, d: 18, h: 24, color: 0x1e293b },
+      { dx: -12, dz: 12, w: 10, d: 10, h: 18, color: 0x0f172a },
+      { dx: 12, dz: -12, w: 12, d: 10, h: 15, color: 0x334155 },
+    ];
+    configs.forEach(c => {
+      const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
+      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.7, roughness: 0.2 });
+      const b = new THREE.Mesh(geo, mat);
+      b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
+      b.castShadow = true; b.receiveShadow = true;
+      group.add(b);
+    });
+    const heliGeo = new THREE.CylinderGeometry(6, 6, 0.4, 16);
+    const heliMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.5 });
+    const heli = new THREE.Mesh(heliGeo, heliMat);
+    heli.position.set(cx, 24.2, cz);
+    group.add(heli);
+  } else if (type === 'sw') {
+    // Residential Blocks: 5-Storey Complex
+    const offsets = [
+      { dx: -11, dz: -10, w: 16, d: 8, h: 14 },
+      { dx: 11, dz: -10, w: 14, d: 8, h: 14 },
+      { dx: -11, dz: 10, w: 16, d: 8, h: 12 },
+      { dx: 11, dz: 10, w: 14, d: 8, h: 12 },
+    ];
+    offsets.forEach(c => {
+      const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.7, metalness: 0.1 });
+      const b = new THREE.Mesh(geo, mat);
+      b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
+      b.castShadow = true; b.receiveShadow = true;
+      group.add(b);
+    });
+  } else if (type === 'se') {
+    // Disaster / Ruined Zone: Collapsed Angular Pillars & Rubble Blocks
+    const ruins = [
+      { dx: -9, dz: -9, w: 12, d: 10, h: 14, rotZ: 0.12 },
+      { dx: 11, dz: -6, w: 10, d: 12, h: 10, rotX: -0.15 },
+      { dx: -6, dz: 11, w: 14, d: 8, h: 8, rotZ: -0.08 },
+      { dx: 11, dz: 11, w: 8, d: 8, h: 16, rotX: 0.1 },
+    ];
+    ruins.forEach(r => {
+      const geo = new THREE.BoxGeometry(r.w, r.h, r.d);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.9, metalness: 0.1 });
+      const b = new THREE.Mesh(geo, mat);
+      b.position.set(cx + r.dx, r.h / 2, cz + r.dz);
+      if (r.rotX) b.rotation.x = r.rotX;
+      if (r.rotZ) b.rotation.z = r.rotZ;
+      b.castShadow = true; b.receiveShadow = true;
+      group.add(b);
+    });
+  }
+
+  envGroup.add(group);
+  editableModelGroups.push({ id: modelId, object: group });
+  return group;
+}
+
 function setupEnvironmentComposition() {
-  const gridSize = replayData.metadata?.grid_size || 10;
-  const cellSize = replayData.metadata?.cell_size_meters || 10.0;
+  const gridSize = replayData?.metadata?.grid_size || 10;
+  const cellSize = replayData?.metadata?.cell_size_meters || 10.0;
   const worldSize = gridSize * cellSize; // 100m x 100m
 
   envGroup = new THREE.Group();
@@ -610,17 +701,21 @@ function setupEnvironmentComposition() {
   }
 
   // 3. NON-OVERLAPPING 4-QUADRANT JIGSAW PUZZLE TILING (0% overlap, 100% coverage)
-  // Quadrant 1: North-West [0..50, 0..50] (HongKong / City Part A)
+  // Quadrant 1: North-West [0..50, 0..50] (HongKong / Tech District)
   if (hongkongMesh) placeTileModel(hongkongMesh, 0.0, 50.0, 0.0, 50.0, 'tile_nw');
+  else createProceduralTile('nw', 0.0, 50.0, 0.0, 50.0, 'tile_nw');
 
-  // Quadrant 2: North-East [50..100, 0..50] (Seoul City)
+  // Quadrant 2: North-East [50..100, 0..50] (Seoul / Commercial District)
   if (seoulMesh) placeTileModel(seoulMesh, 50.0, 100.0, 0.0, 50.0, 'tile_ne');
+  else createProceduralTile('ne', 50.0, 100.0, 0.0, 50.0, 'tile_ne');
 
-  // Quadrant 3: South-West [0..50, 50..100] (New 5-Storey Residential Building)
+  // Quadrant 3: South-West [0..50, 50..100] (Residential Complex)
   if (residentialMesh) placeTileModel(residentialMesh, 0.0, 50.0, 50.0, 100.0, 'tile_sw');
+  else createProceduralTile('sw', 0.0, 50.0, 50.0, 100.0, 'tile_sw');
 
-  // Quadrant 4: South-East [50..100, 50..100] (Ruined City 5 Free)
+  // Quadrant 4: South-East [50..100, 50..100] (Ruined Disaster District)
   if (ruinedMesh) placeTileModel(ruinedMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
+  else createProceduralTile('se', 50.0, 100.0, 50.0, 100.0, 'tile_se');
 
   // Restore saved custom layout or apply DEFAULT_LOCKED_CITY_LAYOUT as codebase base default
   try {

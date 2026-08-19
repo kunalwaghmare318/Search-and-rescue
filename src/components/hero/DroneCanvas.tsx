@@ -1,8 +1,11 @@
 import React, { useRef, useEffect, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Environment } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { MousePosition } from './types';
+
+// Preload drone GLTF model immediately for instantaneous rendering
+useGLTF.preload('/models/drone_design/scene.gltf');
 
 interface DroneModelProps {
   mouseRef: React.MutableRefObject<MousePosition>;
@@ -254,8 +257,6 @@ export const DroneCanvas: React.FC<DroneCanvasProps> = ({
         <directionalLight position={[-10, -5, -5]} intensity={1.5} color="#94a3b8" />
         <pointLight position={[0, 5, 4]} intensity={2.0} color="#38bdf8" />
         <pointLight position={[0, -5, 2]} intensity={1.2} color="#0d9488" />
-
-        <Environment preset="city" />
 
         <Suspense fallback={<DroneFallback />}>
           <DroneModel mouseRef={mouseRef} techProgress={techProgress} modelPath={modelPath} />
