@@ -203,6 +203,10 @@ async function init() {
 
   // 3. Load GLTF models in background and upgrade scene seamlessly
   loadAssets().then(() => {
+    if (hongkongMesh || seoulMesh || residentialMesh || ruinedMesh || statueMesh) {
+      if (envGroup) scene.remove(envGroup);
+      setupEnvironmentComposition();
+    }
     setupDrones();
     setupSurvivors();
   }).catch((e) => {
@@ -302,10 +306,21 @@ function loadGLTFWithTimeout(loader, url, timeoutMs = 90000) {
 async function loadAssets() {
   const loader = new GLTFLoader();
 
-  const [resDrone, resPerson] = await Promise.allSettled([
-    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 8000),
-    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 8000),
+  const [resHK, resSeoul, resRes, resRuin, resStatue, resDrone, resPerson] = await Promise.allSettled([
+    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 25000),
+    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 25000),
+    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 25000),
+    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 25000),
+    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 25000),
+    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 10000),
+    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 10000),
   ]);
+
+  if (resHK.status === 'fulfilled') hongkongMesh = resHK.value.scene;
+  if (resSeoul.status === 'fulfilled') seoulMesh = resSeoul.value.scene;
+  if (resRes.status === 'fulfilled') residentialMesh = resRes.value.scene;
+  if (resRuin.status === 'fulfilled') ruinedMesh = resRuin.value.scene;
+  if (resStatue.status === 'fulfilled') statueMesh = resStatue.value.scene;
 
   if (resDrone.status === 'fulfilled') {
     droneTemplate = resDrone.value.scene;
