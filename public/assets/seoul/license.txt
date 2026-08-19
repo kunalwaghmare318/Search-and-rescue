@@ -1,8 +1,0 @@
-Model Information:
-* title:	Seoul City | Gameready | Render | Blender | PBR
-* source:	https://sketchfab.com/3d-models/seoul-city-gameready-render-blender-pbr-437c621c016c4f15a68b106ba2c4db87
-* author:	abhayexe (https://sketchfab.com/abhayexe)
-
-Model License:
-* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
-* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

@@ -199,10 +199,6 @@ async function init() {
 
   // 3. Load GLTF models in background and upgrade scene seamlessly
   loadAssets().then(() => {
-    if (envGroup) {
-      scene.remove(envGroup);
-      setupEnvironmentComposition();
-    }
     setupDrones();
     setupSurvivors();
   }).catch((e) => {
@@ -301,23 +297,11 @@ function loadGLTFWithTimeout(loader, url, timeoutMs = 90000) {
 
 async function loadAssets() {
   const loader = new GLTFLoader();
-  const warnings = [];
 
-  const [resHongKong, resSeoul, resResidential, resRuined, resStatue, resDrone, resPerson] = await Promise.allSettled([
-    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/drone/scene.gltf', 90000),
-    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 90000),
+  const [resDrone, resPerson] = await Promise.allSettled([
+    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 8000),
+    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 8000),
   ]);
-
-  if (resHongKong.status === 'fulfilled') hongkongMesh = resHongKong.value.scene;
-  if (resSeoul.status === 'fulfilled') seoulMesh = resSeoul.value.scene;
-  if (resResidential.status === 'fulfilled') residentialMesh = resResidential.value.scene;
-  if (resRuined.status === 'fulfilled') ruinedMesh = resRuined.value.scene;
-  if (resStatue.status === 'fulfilled') statueMesh = resStatue.value.scene;
 
   if (resDrone.status === 'fulfilled') {
     droneTemplate = resDrone.value.scene;
@@ -340,10 +324,6 @@ async function loadAssets() {
     personTemplate.position.y = -boxP.min.y;
   } else {
     personTemplate = createPersonFallback();
-  }
-
-  if (assetWarnings && warnings.length > 0) {
-    assetWarnings.innerHTML = warnings.join('<br>');
   }
 }
 
