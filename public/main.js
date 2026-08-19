@@ -461,22 +461,21 @@ function placeTileModel(model, minX, maxX, minZ, maxZ, modelId = 'tile') {
   clone.name = modelId;
   clone.updateMatrixWorld(true);
 
-  // Clean loose stray sub-meshes floating far out of bounds
-  const strayList = [];
+  // Traverse materials to ensure high visibility & proper lighting
   clone.traverse(child => {
-    if (child.isMesh && child !== clone) {
-      child.updateMatrixWorld(true);
-      const cb = new THREE.Box3().setFromObject(child);
-      const cc = cb.getCenter(new THREE.Vector3());
-      if (cc.y > 45 || cc.x < -20 || cc.x > 120 || cc.z < -20 || cc.z > 120) {
-        strayList.push(child);
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      if (child.material) {
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        mats.forEach(m => {
+          m.side = THREE.DoubleSide;
+          if (m.roughness !== undefined) m.roughness = 0.6;
+          if (m.metalness !== undefined) m.metalness = 0.1;
+        });
       }
     }
   });
-  strayList.forEach(child => {
-    if (child.parent) child.parent.remove(child);
-  });
-  clone.updateMatrixWorld(true);
 
   let box = new THREE.Box3().setFromObject(clone);
   let size = box.getSize(new THREE.Vector3());
@@ -485,10 +484,9 @@ function placeTileModel(model, minX, maxX, minZ, maxZ, modelId = 'tile') {
     const tileW = maxX - minX;
     const tileD = maxZ - minZ;
 
-    // Scale precisely so the model fills its assigned puzzle tile without overlapping neighbors
     const scaleX = tileW / size.x;
     const scaleZ = tileD / size.z;
-    const scale = Math.min(scaleX, scaleZ);
+    const scale = Math.min(scaleX, scaleZ) * 0.95;
     clone.scale.set(scale, scale, scale);
     clone.updateMatrixWorld(true);
 
@@ -500,7 +498,7 @@ function placeTileModel(model, minX, maxX, minZ, maxZ, modelId = 'tile') {
 
     clone.position.x = targetX - center.x;
     clone.position.z = targetZ - center.z;
-    clone.position.y = -box.min.y; // Align bottom strictly to ground plane y = 0
+    clone.position.y = -box.min.y;
   }
   envGroup.add(clone);
   editableModelGroups.push({ id: modelId, object: clone });
@@ -554,16 +552,16 @@ function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
   const cz = (minZ + maxZ) / 2;
 
   if (type === 'nw') {
-    // Tech District: 4 High-Rise Skyscraper Towers
+    // Tech District: 4 High-Rise Skyscraper Towers with illuminated accents
     const configs = [
-      { dx: -11, dz: -11, w: 12, d: 12, h: 26, color: 0x1e293b, em: 0x0284c7 },
-      { dx: 11, dz: -9, w: 14, d: 10, h: 20, color: 0x0f172a, em: 0x06b6d4 },
-      { dx: -9, dz: 11, w: 10, d: 14, h: 22, color: 0x1e293b, em: 0x38bdf8 },
-      { dx: 11, dz: 11, w: 12, d: 12, h: 16, color: 0x334155, em: 0x0ea5e9 },
+      { dx: -11, dz: -11, w: 12, d: 12, h: 26, color: 0x334155, em: 0x0284c7 },
+      { dx: 11, dz: -9, w: 14, d: 10, h: 20, color: 0x475569, em: 0x06b6d4 },
+      { dx: -9, dz: 11, w: 10, d: 14, h: 22, color: 0x3b82f6, em: 0x38bdf8 },
+      { dx: 11, dz: 11, w: 12, d: 12, h: 16, color: 0x64748b, em: 0x0ea5e9 },
     ];
     configs.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.8, roughness: 0.25 });
+      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.2, roughness: 0.5 });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
@@ -578,13 +576,13 @@ function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
   } else if (type === 'ne') {
     // Commercial District: Stepped Glass Towers & Heli-deck
     const configs = [
-      { dx: 0, dz: 0, w: 18, d: 18, h: 24, color: 0x1e293b },
-      { dx: -12, dz: 12, w: 10, d: 10, h: 18, color: 0x0f172a },
+      { dx: 0, dz: 0, w: 18, d: 18, h: 24, color: 0x475569 },
+      { dx: -12, dz: 12, w: 10, d: 10, h: 18, color: 0x64748b },
       { dx: 12, dz: -12, w: 12, d: 10, h: 15, color: 0x334155 },
     ];
     configs.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.7, roughness: 0.2 });
+      const mat = new THREE.MeshStandardMaterial({ color: c.color, metalness: 0.2, roughness: 0.5 });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
@@ -605,7 +603,7 @@ function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
     ];
     offsets.forEach(c => {
       const geo = new THREE.BoxGeometry(c.w, c.h, c.d);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.7, metalness: 0.1 });
+      const mat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.6, metalness: 0.1 });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + c.dx, c.h / 2, cz + c.dz);
       b.castShadow = true; b.receiveShadow = true;
@@ -621,7 +619,7 @@ function createProceduralTile(type, minX, maxX, minZ, maxZ, modelId = 'tile') {
     ];
     ruins.forEach(r => {
       const geo = new THREE.BoxGeometry(r.w, r.h, r.d);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.9, metalness: 0.1 });
+      const mat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.7, metalness: 0.1 });
       const b = new THREE.Mesh(geo, mat);
       b.position.set(cx + r.dx, r.h / 2, cz + r.dz);
       if (r.rotX) b.rotation.x = r.rotX;
@@ -644,7 +642,7 @@ function setupEnvironmentComposition() {
   envGroup = new THREE.Group();
   editableModelGroups.length = 0;
 
-  // 1. Full 10x10 Area Asphalt Ground Base (No empty ground holes)
+  // 1. Full 10x10 Area Asphalt Ground Base
   const zoneGeo = new THREE.PlaneGeometry(worldSize, worldSize);
   const zoneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8, metalness: 0.2 });
   const zonePlane = new THREE.Mesh(zoneGeo, zoneMat);
@@ -695,15 +693,16 @@ function setupEnvironmentComposition() {
   } else {
     // Procedural SciFi Monument Fallback
     const monGeo = new THREE.CylinderGeometry(1.2, 2.5, 16, 8);
-    const monMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.9, roughness: 0.2 });
+    const monMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.5, roughness: 0.3 });
     const mon = new THREE.Mesh(monGeo, monMat);
     mon.position.set(worldSize / 2, 8.6, worldSize / 2);
     mon.name = 'statue';
+    mon.castShadow = true;
     envGroup.add(mon);
     editableModelGroups.push({ id: 'statue', object: mon });
   }
 
-  // 3. NON-OVERLAPPING 4-QUADRANT JIGSAW PUZZLE TILING (0% overlap, 100% coverage)
+  // 3. NON-OVERLAPPING 4-QUADRANT JIGSAW PUZZLE TILING
   // Quadrant 1: North-West [0..50, 0..50] (HongKong / Tech District)
   if (hongkongMesh) placeTileModel(hongkongMesh, 0.0, 50.0, 0.0, 50.0, 'tile_nw');
   else createProceduralTile('nw', 0.0, 50.0, 0.0, 50.0, 'tile_nw');
@@ -720,41 +719,21 @@ function setupEnvironmentComposition() {
   if (ruinedMesh) placeTileModel(ruinedMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
   else createProceduralTile('se', 50.0, 100.0, 50.0, 100.0, 'tile_se');
 
-  // Restore saved custom layout or apply DEFAULT_LOCKED_CITY_LAYOUT as codebase base default
+  // Optional: Restore user's customized layout from localStorage if they used the interactive layout editor
   try {
-    // Always default to base locked-in environment layout
-    const layoutToApply = DEFAULT_LOCKED_CITY_LAYOUT;
-
-    layoutToApply.forEach(item => {
-      const target = editableModelGroups.find(m => m.id === item.id);
-      if (target && target.object) {
-        target.object.position.fromArray(item.pos);
-        target.object.rotation.fromArray(item.rot);
-        target.object.scale.fromArray(item.scale);
-      }
-    });
-  } catch (err) {
-    console.warn('Could not restore city layout:', err);
-  }
-
-  // ENFORCE STRICT GROUNDING & 10x10 GRID BOUNDARIES
-  // Guarantees zero models float in mid-air and all sit strictly inside 100m x 100m grid!
-  editableModelGroups.forEach(m => {
-    if (m.object) {
-      m.object.updateMatrixWorld(true);
-      const b = new THREE.Box3().setFromObject(m.object);
-      // Eliminate mid-air floating by aligning bounding box bottom strictly to ground plane y = 0.0
-      m.object.position.y -= b.min.y;
-
-      // Clamp X and Z position strictly inside 10x10 grid bounds [15m, 85m]
-      m.object.position.x = Math.max(15.0, Math.min(85.0, m.object.position.x));
-      m.object.position.z = Math.max(15.0, Math.min(85.0, m.object.position.z));
-
-      m.object.updateMatrixWorld(true);
-      const finalB = new THREE.Box3().setFromObject(m.object);
-      m.object.position.y -= finalB.min.y;
+    const saved = localStorage.getItem('vihang_custom_city_layout');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      parsed.forEach(item => {
+        const target = editableModelGroups.find(m => m.id === item.id);
+        if (target && target.object) {
+          target.object.position.fromArray(item.pos);
+          target.object.rotation.fromArray(item.rot);
+          target.object.scale.fromArray(item.scale);
+        }
+      });
     }
-  });
+  } catch (e) {}
 
   envGroup.traverse(child => {
     if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
