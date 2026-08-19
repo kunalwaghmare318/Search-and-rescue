@@ -143,14 +143,13 @@ function setHtml(el, val) {
 }
 
 // ==============================================================================
-// INITIALIZATION (INSTANT RENDER + BACKGROUND ASSET UPGRADE)
+// INITIALIZATION (LOAD EXACT GLTF CITY DIRECTLY ON STARTUP)
 // ==============================================================================
 async function init() {
   try {
     setupThreeScene();
     setupEventListeners();
 
-    // 1. Render immediately with base state (0ms delay!)
     replayData = {
       metadata: { grid_size: 10, cell_size_meters: 10.0, num_agents: 5 },
       initial_state: {
@@ -163,8 +162,8 @@ async function init() {
       }
     };
 
-    if (!droneTemplate) droneTemplate = createDroneFallback();
-    if (!personTemplate) personTemplate = createPersonFallback();
+    // Load exact GLTF 3D city models FIRST before rendering so no rough boxes ever appear
+    await loadAssets();
 
     setupEnvironmentComposition();
     setupSurvivors();
@@ -173,13 +172,14 @@ async function init() {
     animate();
   } catch (err) {
     console.error('Initialization error caught safely:', err);
-  } finally {
-    if (loadingScreen) {
-      loadingScreen.classList.add('hidden');
-    }
+    setupEnvironmentComposition();
+    setupSurvivors();
+    setupDrones();
+    setupUI();
+    animate();
   }
 
-  // 2. Connect to Live API or fallback log asynchronously
+  // Connect to Live API or fallback log asynchronously in background
   (async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/start`, { method: 'POST' });
@@ -200,18 +200,6 @@ async function init() {
       } catch (e2) {}
     }
   })();
-
-  // 3. Load GLTF models in background and upgrade scene seamlessly
-  loadAssets().then(() => {
-    if (hongkongMesh || seoulMesh || residentialMesh || ruinedMesh || statueMesh) {
-      if (envGroup) scene.remove(envGroup);
-      setupEnvironmentComposition();
-    }
-    setupDrones();
-    setupSurvivors();
-  }).catch((e) => {
-    console.log('Background asset load completed with fallbacks:', e);
-  });
 }
 
 function updateLoader(pct, text) {
@@ -963,21 +951,23 @@ function setupEnvironmentComposition() {
   if (ruinedMesh) placeTileModel(ruinedMesh, 50.0, 100.0, 50.0, 100.0, 'tile_se');
   else createProceduralTile('se', 50.0, 100.0, 50.0, 100.0, 'tile_se');
 
-  // Optional: Restore user's customized layout from localStorage if they used the interactive layout editor
+  // Apply the exact locked city layout
+  let layoutToApply = DEFAULT_LOCKED_CITY_LAYOUT;
   try {
     const saved = localStorage.getItem('vihang_custom_city_layout');
     if (saved) {
-      const parsed = JSON.parse(saved);
-      parsed.forEach(item => {
-        const target = editableModelGroups.find(m => m.id === item.id);
-        if (target && target.object) {
-          target.object.position.fromArray(item.pos);
-          target.object.rotation.fromArray(item.rot);
-          target.object.scale.fromArray(item.scale);
-        }
-      });
+      layoutToApply = JSON.parse(saved);
     }
   } catch (e) {}
+
+  layoutToApply.forEach(item => {
+    const target = editableModelGroups.find(m => m.id === item.id);
+    if (target && target.object) {
+      if (item.pos) target.object.position.fromArray(item.pos);
+      if (item.rot) target.object.rotation.fromArray(item.rot);
+      if (item.scale) target.object.scale.fromArray(item.scale);
+    }
+  });
 
   envGroup.traverse(child => {
     if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
