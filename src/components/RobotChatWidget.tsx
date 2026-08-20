@@ -4,12 +4,12 @@ import { useGLTF, useAnimations, Float, OrbitControls } from '@react-three/drei'
 import { MessageSquare, X, Send, Bot, Sparkles, Shield, Cpu, RefreshCw, ChevronRight } from 'lucide-react';
 import * as THREE from 'three';
 
-// Preload robot GLTF model
-useGLTF.preload('/models/robot/scene.gltf');
+// Preload robot GLB model
+useGLTF.preload('/models/robot/scene.glb');
 
 function FlyingRobotModel({ onClick }: { onClick: () => void }) {
   const groupRef = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF('/models/robot/scene.gltf');
+  const { scene, animations } = useGLTF('/models/robot/scene.glb');
   const { actions } = useAnimations(animations, groupRef);
 
   useEffect(() => {

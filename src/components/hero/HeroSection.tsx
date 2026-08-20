@@ -44,7 +44,7 @@ const DEFAULT_HERO_ITEMS: HeroTextItem[] = [
 ];
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
-  modelPath = '/models/drone_design/scene.gltf',
+  modelPath = '/models/drone_design/scene.glb',
   items = DEFAULT_HERO_ITEMS,
   className = ''
 }) => {

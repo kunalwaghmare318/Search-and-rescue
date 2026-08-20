@@ -4,8 +4,8 @@ import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { MousePosition } from './types';
 
-// Preload drone GLTF model immediately for instantaneous rendering
-useGLTF.preload('/models/drone_design/scene.gltf');
+// Preload drone binary GLB model immediately for fast single-stream loading
+useGLTF.preload('/models/drone_design/scene.glb');
 
 interface DroneModelProps {
   mouseRef: React.MutableRefObject<MousePosition>;
@@ -18,7 +18,7 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
   const droneRef = useRef<THREE.Group>(null);
   const gltfRotorsRef = useRef<THREE.Object3D[]>([]);
 
-  // Load the exact GLTF model
+  // Load the single binary GLB model
   const { scene: originalScene } = useGLTF(modelPath);
   const scene = useMemo(() => originalScene.clone(true), [originalScene]);
 
@@ -33,7 +33,7 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
   const isTrickActiveRef = useRef(false);
   const trickProgressRef = useRef(0);
 
-  // Identify internal rotor / propeller / plane nodes and tune PBR materials for bright lighting
+  // Identify internal rotor / propeller nodes and tune PBR materials
   useEffect(() => {
     if (scene) {
       const foundRotors: THREE.Object3D[] = [];
@@ -53,7 +53,7 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
           }
         }
 
-        // Target the rotor node cleanly
+        // Target the propeller node cleanly
         if (child.name === 'Plane' || child.name.toLowerCase() === 'rotor') {
           foundRotors.push(child);
         }
@@ -160,7 +160,7 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
       droneRef.current.rotation.y = THREE.MathUtils.lerp(droneRef.current.rotation.y, finalYaw, delta * 5.0);
     }
 
-    // 5. High-RPM Rotor Spin on proper rotor axis
+    // 5. High-RPM Rotor Spin on rotor axis
     gltfRotorsRef.current.forEach((rotor) => {
       rotor.rotation.z += delta * 60.0;
     });
@@ -187,7 +187,7 @@ function DroneModel({ mouseRef, techProgress = 0, modelPath }: DroneModelProps) 
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      {/* 3D GLTF Drone Model with Dynamic Scale */}
+      {/* 3D GLB Drone Model with Dynamic Scale */}
       <group ref={droneRef} scale={[currentScale, currentScale, currentScale]} onPointerDown={handlePointerDown}>
         <primitive object={scene} />
       </group>
@@ -205,7 +205,7 @@ interface DroneCanvasProps {
 export const DroneCanvas: React.FC<DroneCanvasProps> = ({
   mouseRef,
   techProgress = 0,
-  modelPath = '/models/drone_design/scene.gltf',
+  modelPath = '/models/drone_design/scene.glb',
   className = ''
 }) => {
   return (
@@ -223,7 +223,7 @@ export const DroneCanvas: React.FC<DroneCanvasProps> = ({
         <pointLight position={[0, 4, 4]} intensity={2.5} color="#38bdf8" />
         <pointLight position={[0, -4, 2]} intensity={1.5} color="#0d9488" />
 
-        {/* Load ONLY the real GLTF model, no dummy fallback */}
+        {/* Load ONLY the real GLB model, no dummy fallback */}
         <Suspense fallback={null}>
           <DroneModel mouseRef={mouseRef} techProgress={techProgress} modelPath={modelPath} />
         </Suspense>

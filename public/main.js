@@ -299,9 +299,9 @@ async function loadAssets() {
     loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 45000),
     loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 45000),
     loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 45000),
-    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 45000),
-    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 20000),
-    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 20000),
+    loadGLTFWithTimeout(loader, 'assets/statue/scene.glb', 45000),
+    loadGLTFWithTimeout(loader, 'models/drone_design/scene.glb', 25000),
+    loadGLTFWithTimeout(loader, 'assets/person/scene.glb', 25000),
   ]);
 
   if (resHK.status === 'fulfilled') hongkongMesh = resHK.value.scene;

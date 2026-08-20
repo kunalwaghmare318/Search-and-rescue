@@ -27,7 +27,11 @@ AM_V2_MODEL_PATH = "models/ppo_area_mapping_v2_2000000_steps.zip" if os.path.exi
 AM_V3_MODEL_PATH = "models/ppo_area_mapping_v3_BEST.zip" if os.path.exists("models/ppo_area_mapping_v3_BEST.zip") else "models/ppo_area_mapping_v3_final.zip"
 CELL_SIZE_METERS = 10.0
 
+from fastapi.middleware.gzip import GZipMiddleware
+
 app = FastAPI(title="VIHANG Live Simulation API (V15)", version="1.5.0")
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,11 +43,23 @@ app.add_middleware(
 
 
 @app.middleware("http")
-async def add_no_cache_header(request, call_next):
+async def add_smart_cache_headers(request, call_next):
     response = await call_next(request)
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    path = request.url.path.lower()
+    
+    # 3D models, textures, scripts, and stylesheets benefit from high-speed disk caching
+    cacheable_extensions = (
+        '.glb', '.gltf', '.bin', '.png', '.jpg', '.jpeg', '.webp', '.svg',
+        '.js', '.css', '.woff2', '.woff', '.ttf', '.json'
+    )
+    if any(path.endswith(ext) for ext in cacheable_extensions) or path.startswith('/assets/') or path.startswith('/models/'):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    else:
+        # Dynamic API routes and index HTML remain fresh
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        
     return response
 
 class ServerState:

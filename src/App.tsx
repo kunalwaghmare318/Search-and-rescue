@@ -7,21 +7,29 @@ export function App() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<'overview' | 'tech' | 'demo'>('overview');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSimLoaded, setIsSimLoaded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const demoEl = document.getElementById('demo');
       const overviewEl = document.getElementById('overview');
-      if (demoEl && demoEl.getBoundingClientRect().top < window.innerHeight * 0.5) {
-        setActiveSection('demo');
-      } else if (overviewEl) {
-        const totalScroll = overviewEl.offsetHeight - window.innerHeight;
-        const currentScroll = window.scrollY - overviewEl.offsetTop;
-        const rawProgress = totalScroll > 0 ? currentScroll / totalScroll : 0;
-        if (rawProgress > 0.35) {
-          setActiveSection('tech');
-        } else {
-          setActiveSection('overview');
+      if (demoEl) {
+        const demoRect = demoEl.getBoundingClientRect();
+        // Pre-load simulation when user scrolls within 800px of the demo section
+        if (demoRect.top < window.innerHeight + 800) {
+          setIsSimLoaded(true);
+        }
+        if (demoRect.top < window.innerHeight * 0.5) {
+          setActiveSection('demo');
+        } else if (overviewEl) {
+          const totalScroll = overviewEl.offsetHeight - window.innerHeight;
+          const currentScroll = window.scrollY - overviewEl.offsetTop;
+          const rawProgress = totalScroll > 0 ? currentScroll / totalScroll : 0;
+          if (rawProgress > 0.35) {
+            setActiveSection('tech');
+          } else {
+            setActiveSection('overview');
+          }
         }
       } else {
         setActiveSection('overview');
@@ -92,7 +100,10 @@ export function App() {
                 window.scrollTo({ top: overviewEl.offsetTop + totalScroll * 0.55, behavior: 'smooth' });
               }
             }},
-            { id: 'demo' as const, label: 'SIMULATION', onClick: () => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' }), isSim: true },
+            { id: 'demo' as const, label: 'SIMULATION', onClick: () => {
+              setIsSimLoaded(true);
+              document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
+            }, isSim: true },
           ]).map(btn => (
             <a
               key={btn.id}
@@ -269,7 +280,7 @@ export function App() {
               </div>
             </div>
 
-            {/* Embedded Live Simulation Canvas Container */}
+            {/* Embedded Live Simulation Canvas Container (Lazy-Loaded) */}
             <div style={{
               position: 'relative',
               width: '100%',
@@ -277,18 +288,43 @@ export function App() {
               background: '#0f172a',
               transition: 'height 0.4s ease'
             }}>
-              <iframe
-                src="/simulation.html"
-                title="VIHANG 3D Live Simulation Engine"
-                style={{
-                  width: '100%',
+              {isSimLoaded ? (
+                <iframe
+                  src="/simulation.html"
+                  title="VIHANG 3D Live Simulation Engine"
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    display: 'block',
+                    background: '#0f172a'
+                  }}
+                />
+              ) : (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   height: '100%',
-                  border: 'none',
-                  display: 'block',
-                  background: '#0f172a'
-                }}
-              />
+                  color: '#64748b',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  gap: '12px'
+                }}>
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    border: '2px solid rgba(45, 212, 191, 0.2)',
+                    borderTopColor: '#2dd4bf',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }} />
+                  <span style={{ fontSize: '0.85rem' }}>SIMULATION READY · SCROLL TO INITIALIZE</span>
+                </div>
+              )}
             </div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
       </section>
