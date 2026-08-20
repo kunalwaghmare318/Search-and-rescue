@@ -90,10 +90,8 @@ def load_model_if_needed():
 
 @app.on_event("startup")
 def startup_event():
-    try:
-        load_model_if_needed()
-    except Exception:
-        pass
+    import threading
+    threading.Thread(target=load_model_if_needed, daemon=True).start()
 
 
 @app.post("/randomize")
