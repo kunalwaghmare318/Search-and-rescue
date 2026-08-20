@@ -295,13 +295,13 @@ async function loadAssets() {
   const loader = new GLTFLoader();
 
   const [resHK, resSeoul, resRes, resRuin, resStatue, resDrone, resPerson] = await Promise.allSettled([
-    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 25000),
-    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 25000),
-    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 25000),
-    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 25000),
-    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 25000),
-    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 10000),
-    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 10000),
+    loadGLTFWithTimeout(loader, 'assets/hongkong/scene.gltf', 45000),
+    loadGLTFWithTimeout(loader, 'assets/seoul/scene.gltf', 45000),
+    loadGLTFWithTimeout(loader, 'assets/residential/scene.gltf', 45000),
+    loadGLTFWithTimeout(loader, 'assets/ruined/scene.gltf', 45000),
+    loadGLTFWithTimeout(loader, 'assets/statue/scene.gltf', 45000),
+    loadGLTFWithTimeout(loader, 'models/drone_design/scene.gltf', 20000),
+    loadGLTFWithTimeout(loader, 'assets/person/scene.gltf', 20000),
   ]);
 
   if (resHK.status === 'fulfilled') hongkongMesh = resHK.value.scene;
